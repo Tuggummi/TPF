@@ -12,9 +12,9 @@ Perhaps you changed anything or it was a problem on my end. If it doesn't work w
 #### How to install
 1. Download the resource from GitHub and put it in the Resource root folder.
 2. Make sure you have MySQL-async installed and the connection-string setup as well as a database, if you don't; Google will probably help.
-3. Start the resource in your server.cfg (ensure TPF).
+3. Start the resource in your server.cfg (ensure TPF)
 4. Open HeidiSQL and Load the SQL file, press F9 while selected to your database, and with the SQL File opened. It should create users_information and users_identifiers.
-5. Make sure to edit the config to what you see fit. To change the first spawning location, go into the SQL file before executing it and change the coordinates to the ones you'd like. '{COORDINATES, GO, HERE}' (Remember, commas between y, x, z)
+5. Make sure to edit the config to what you see fit. To change the default spawning location, use the last part of TPF.sql and change it to what you'd like. That is if you already executed the other part
 6. Fire it up by restarting your server or starting it by hand.
 
 # DEPENDENCIES

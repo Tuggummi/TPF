@@ -20,3 +20,13 @@ CREATE TABLE `users_information` (
 COLLATE='utf8mb4_general_ci'
 ENGINE=InnoDB
 ;
+
+/* ONLY USE THIS TO EDIT THE DEFAULT SPAWNING LOCATION
+If you didn't change it before executing the CREATE TABLE above and don't want to lose information you have. 
+*/
+/* Also, remember to have commas between x, y, z, heading */
+/*
+ALTER TABLE `users_information`
+	CHANGE COLUMN `lastpos` `lastpos` VARCHAR(255) NULL DEFAULT '{COORDINATES, GOES, HERE, HEADING}' COLLATE 'utf8mb4_general_ci' AFTER `steamid`;
+COPY FROM "ALTER TABLE" TO "AFTER `steamid`;" and change the coordinates to edit the tables lastpos
+*/
