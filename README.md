@@ -17,7 +17,7 @@ Perhaps you changed anything or it was a problem on my end. If it doesn't work w
 5. Make sure to edit the config to what you see fit.
 6. Fire it up by restarting your server or starting it by hand.
 
-##### Version 1.0.0
+## Version 1.0.0
 _The first release_
 
 ¤ Making it possible to save your players' identifiers, such as Steamid, Discord, and even IP. Use this carefully, my recommendation is to NOT share any of the players' information with anyone.
