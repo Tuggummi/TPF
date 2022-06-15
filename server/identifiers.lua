@@ -1,11 +1,10 @@
--- Saves the players identifiers at the database
+-- DO NOT EDIT ANYTHING HERE; YOU ARE NOT PERMITTED AND YOU CAN RUIN THE RESOURCE! --
 
--- Should there be debug prints within the console when events are triggered. (Not recommended if not for debug use)
-debugPrint = false
+local location = '^1{^2Identifiers^1}^7 ~ '
 
 --Player Connecting
 AddEventHandler('playerConnecting', function(name, setKickReason, deferrals)
-    if debugPrint then print('Skapar variabler') end
+    if Config.debugPrint then print(location .. 'Creating variables') end
     --Creating variables
     local source = source
     local identifiers = GetPlayerIdentifiers(source)
@@ -14,7 +13,7 @@ AddEventHandler('playerConnecting', function(name, setKickReason, deferrals)
     local discord
     local fivem
     local ip
-    if debugPrint then print('Variabler skapade') end
+    if Config.debugPrint then print(location .. 'Variables created') end
 
     for k, v in ipairs(identifiers) do
         if string.match(v, 'steam') then
@@ -29,30 +28,30 @@ AddEventHandler('playerConnecting', function(name, setKickReason, deferrals)
             ip = v
         end
     end
-    if debugPrint then print('Variabler satta som spelarens') end
+    if Config.debugPrint then print(location .. 'Variables defined as players') end
     -- Checks if steam is open, to get a correct answer to steamid
     if not steamid then 
-        deferrals.done('Du behöver steam öppet för att ansluta till servern!')
-        if debugPrint then print('Steam var ej öppet, varnar') end
+        deferrals.done(Config.noSteam)
+        if Config.debugPrint then print(location .. 'Steam is not open, warning') end
     else
         deferrals.done()
-        if debugPrint then print('Steam var öppet, hämtar steamid') end
+        if Config.debugPrint then print(location .. 'Steam was open, fetching steamid') end
 
         MySQL.Async.fetchScalar('SELECT 1 FROM users_identifiers WHERE steamid = @steamid', {
             ["@steamid"] = steamid
         }, function(result)
             if not result then
-                if debugPrint then print('Steamid finns ej i databasen, inför...') end
+                if Config.debugPrint then print(location .. 'No information with users steamid exists in DB, inserting...') end
                 
                 MySQL.Async.execute('INSERT INTO users_identifiers (steamname, steamid, license, discord, fivem, ip) VALUES (@steamname, @steamid, @license, @discord, @fivem, @ip)',
                 {["@steamname"] = GetPlayerName(source), ["@steamid"] = steamid, ["@license"] = license, ["@discord"] = discord, ["@fivem"] = fivem, ["@ip"] = ip})
-                if debugPrint then print('Införning utav identifierare slutförd, spelare ansluter.') end
+                if Config.debugPrint then print(location .. 'Inserting done, player is connecting.') end
             else
-                if debugPrint then print('Steamid fanns i databasen, uppdatterar...') end
+                if Config.debugPrint then print(location .. 'Information with users steamid exists, updating...') end
 
                 MySQL.Async.execute('UPDATE users_identifiers SET steamname = @steamname, license = @license, discord = @discord, fivem = @fivem, ip = @ip WHERE steamid = @steamid', 
                 {["@steamname"] = GetPlayerName(source), ["@license"] = license, ["@discord"] = discord, ["@fivem"] = fivem, ["@ip"] = ip, ["@steamid"] = steamid})
-                if debugPrint then print('Uppdaterning slutförd, spelare ansluter.') end
+                if Config.debugPrint then print(location .. 'Update done, player is connecting.') end
             end
         end)
     end

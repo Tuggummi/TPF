@@ -28,5 +28,6 @@ _The first release._
 https://docs.fivem.net/docs/game-references/ped-models/
 
 __Comming soon__
-The thing I prioritize is making it so that the script saves exactly when the player exit. This will be arriving very soon.
-I also plan on making a way to save the last ped, if you changed it and don't want it to change back every time.
+¤ The thing I prioritize is making it so that the script saves exactly when the player exit. This will be arriving very soon.
+¤ I plan on making a way to save the last ped, if you changed it and don't want it to change back every time.
+¤ There will be coming a update to the config where you can edit what identifiers you want to save. Though not straight away.
