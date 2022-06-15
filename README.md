@@ -1,4 +1,4 @@
-### TPF - Tuggummi Powerful Framework
+### TPF - Tuggummis Powerful Framework
 
 First things first, welcome! Welcome to my standalone-based framework.
 For now, there isn't much to start at, though this framework already is necessary for a FiveM Server. 
