@@ -1,6 +1,6 @@
 ### TPF - Tuggummis Powerful Framework
 
-First things first, welcome! Welcome to my standalone-based framework.
+First things first, welcome! Welcome to my framework.
 For now, there isn't much to start at, though this framework already is necessary for a FiveM Server. 
 In the future this framework will evolve into something much bigger, but only if it is appreciated. I will be using this on my server, obviously, so any error that I encounter I will try to solve as fast as possible and upload it as well.
 
@@ -16,6 +16,9 @@ Perhaps you changed anything or it was a problem on my end. If it doesn't work w
 4. Open HeidiSQL and Load the SQL file, press F9 while selected to your database, and with the SQL File opened. It should create users_information and users_identifiers.
 5. Make sure to edit the config to what you see fit. To change the first spawning location, go into the SQL file before executing it and change the coordinates to the ones you'd like. '{COORDINATES, GO, HERE}' (Remember, commas between y, x, z)
 6. Fire it up by restarting your server or starting it by hand.
+
+# DEPENDENCIES
+You need to download mysql-async for this script to work.
 
 ## Version 1.0.0
 _The first release_
