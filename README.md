@@ -1,4 +1,4 @@
-__TPF - Tuggummi Powerful Framework__
+### TPF - Tuggummi Powerful Framework
 
 First things first, welcome! Welcome to my standalone-based framework.
 For now, there isn't much to start at, though this framework already is necessary for a FiveM Server. 
@@ -17,8 +17,8 @@ Perhaps you changed anything or it was a problem on my end. If it doesn't work w
 5. Make sure to edit the config to what you see fit.
 6. Fire it up by restarting your server or starting it by hand.
 
-__1.0.0__
-_The first release._
+#### 1.0.0
+_The first release_
 
 ¤ Making it possible to save your players' identifiers, such as Steamid, Discord, and even IP. Use this carefully, my recommendation is to NOT share any of the players' information with anyone.
 
@@ -27,7 +27,8 @@ _The first release._
 ¤ Lastly, there is a ped spawning function, it makes everyone spawn with the same character as you configure. This is default turned to false, if you'd like to use it, turn usePedModel = true and pedModel = to the one you want. 
 https://docs.fivem.net/docs/game-references/ped-models/
 
-__Comming soon__
+### Comming soon
+
 ¤ The thing I prioritize is making it so that the script saves exactly when the player exit. This will be arriving very soon.
 
 ¤ I plan on making a way to save the last ped, if you changed it and don't want it to change back every time.
