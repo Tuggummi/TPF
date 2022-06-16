@@ -27,9 +27,9 @@ https://github.com/brouznouf/fivem-mysql-async
 
 ## 1.0.1
 
-¤ I added a configuration part where you can choose if the players' position should be saved or not. The default location still need to be in the database or the script won't work. 
+¤ I added a configuration part where you can choose if the players' position should be saved or not. The default location is still required to be in the database for the resource to work.
 
-¤ Use the last part of TPF.sql to edit the existing default location, ofcourse replace it with your own coordiantes. Make sure to use commas and put it inbetween '{}'.
+¤ Added a simple way to edit the default spawning location. Use the last part of TPF.sql to edit the existing default location, ofcourse replace it with your own coordiantes. Make sure to use commas and put it inbetween '{}'.
 
 ## 1.0.0
 _The first release_
