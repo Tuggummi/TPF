@@ -2,7 +2,7 @@
 
 First things first, welcome! Welcome to my framework.
 For now, there isn't much to start at, though this framework already is necessary for a FiveM Server. 
-In the future this framework will evolve into something much bigger, but only if it is appreciated. I will be using this on my server, obviously, so any error that I encounter I will try to solve as fast as possible and upload it as well.
+In the future this framework will evolve into something much bigger, but only if it is appreciated. I will be using this on my server, so any error that I encounter I will try to solve as fast as possible and upload it as well.
 
 If you would happen to experience random crashes or any error overall, please contact me via discord.
 I will look into it as fast as humanly possible and solve it.
