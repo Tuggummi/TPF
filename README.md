@@ -20,6 +20,12 @@ Perhaps you changed anything or it was a problem on my end. If it doesn't work w
 # DEPENDENCIES
 You need to download mysql-async for this script to work.
 
+## Version 1.0.1
+
+¤ I added a configuration part where you can choose if the players' position should be saved or not. The default location still need to be in the database or the script won't work. 
+
+¤ Use the last part of TPF.sql to edit the existing default location, ofcourse replace it with your own coordiantes. Make sure to use spaces and put it inbetween '{}'.
+
 ## Version 1.0.0
 _The first release_
 
@@ -31,8 +37,6 @@ _The first release_
 https://docs.fivem.net/docs/game-references/ped-models/
 
 ### Comming soon
-
-¤ The thing I prioritize is making it so that the script saves exactly when the player exit. This will be arriving very soon.
 
 ¤ I plan on making a way to save the last ped, if you changed it and don't want it to change back every time.
 

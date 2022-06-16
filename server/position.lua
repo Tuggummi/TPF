@@ -41,17 +41,26 @@ AddEventHandler('TPF_savepos', function(posX, posY, posZ, viewAngle)
 
     local source = source
 
-    local lastPosition = '{' .. posX .. ', ' .. posY .. ', ' .. posZ .. ', ' .. viewAngle .. '}'
-    local success = MySQL.Sync.execute('UPDATE users_information SET `lastpos` = @lastpos WHERE steamid = @username', {['@lastpos'] = lastPosition, ['@username'] = GetPlayerIdentifier(source, 0)})
+    if Config.savePlayerPos then
 
-    if Config.debugPrint then print(location .. 'Saving position for ' .. GetPlayerName(source)) end
+    
+        local lastPosition = '{' .. posX .. ', ' .. posY .. ', ' .. posZ .. ', ' .. viewAngle .. '}'
+        local success = MySQL.Sync.execute('UPDATE users_information SET `lastpos` = @lastpos WHERE steamid = @username', {['@lastpos'] = lastPosition, ['@username'] = GetPlayerIdentifier(source, 0)})
 
-    if success == 1 then
-        if Config.debugPrint then print(location .. 'Saving success') else return end
+        if Config.debugPrint then print(location .. 'Saving position for ' .. GetPlayerName(source)) end
+
+        if success == 1 then
+            if Config.debugPrint then print(location .. 'Saving success') else return end
+        else
+            if Config.debugPrint then print(location .. 'Saving error') else return end
+        end
     else
-        if Config.debugPrint then print(location .. 'Saving error') else return end
+        if Config.debugPrint then
+            print(location .. '^3Config^7 says ^5not to save position^7. \n No position saved for ' .. GetPlayerName(source))
+        else
+            return
+        end
     end
-
 end)
 
 RegisterServerEvent('TPF_SpawnPlayer')

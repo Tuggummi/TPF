@@ -9,7 +9,11 @@ function requestSave()
     local viewAngle = GetEntityHeading(GetPlayerPed(-1))
 
     TriggerServerEvent('TPF_savepos', posX, posY, posZ, viewAngle)
-    if Config.debugPrint then print(location .. 'Player position saved.') end
+    if Config.savePlayerPos then
+        if Config.debugPrint then print(location .. 'Player position saved.') else return end
+    else
+        return
+    end
 end
 
 function AutoSave()
