@@ -18,15 +18,20 @@ Perhaps you changed anything or it was a problem on my end. If it doesn't work w
 6. Fire it up by restarting your server or starting it by hand.
 
 # DEPENDENCIES
-You need to download mysql-async for this script to work.
+You need to download mysql-async for this script to work. Please do so with this link:
 
-## Version 1.0.1
+https://github.com/brouznouf/fivem-mysql-async
+
+
+# VERSIONS
+
+## 1.0.1
 
 ¤ I added a configuration part where you can choose if the players' position should be saved or not. The default location still need to be in the database or the script won't work. 
 
 ¤ Use the last part of TPF.sql to edit the existing default location, ofcourse replace it with your own coordiantes. Make sure to use spaces and put it inbetween '{}'.
 
-## Version 1.0.0
+## 1.0.0
 _The first release_
 
 ¤ Making it possible to save your players' identifiers, such as Steamid, Discord, and even IP. Use this carefully, my recommendation is to NOT share any of the players' information with anyone.
