@@ -8,7 +8,13 @@ description 'TPF - A powerful framework created by Tuggummi.'
 version '1.0.0'
 
 shared_script 'config.lua'
-client_script 'client/position.lua'
+
+
+client_script {
+    'client/position.lua',
+    'client/death.lua',
+    'client/functions.lua'
+}
 server_scripts {
     'server/position.lua',
     'server/identifiers.lua',
