@@ -1,6 +1,6 @@
 ### TPF - Tuggummis Powerful Framework
 
-First things first, welcome! Welcome to my framework.
+First things first, welcome to my framework.
 For now, there isn't much to start at, though this framework already is necessary for a FiveM Server. 
 In the future this framework will evolve into something much bigger, but only if it is appreciated. I will be using this on my server, so any error that I encounter I will try to solve as fast as possible and upload it as well.
 
@@ -15,15 +15,25 @@ Perhaps you changed anything or it was a problem on my end. If it doesn't work w
 3. Start the resource in your server.cfg (ensure TPF)
 4. Open HeidiSQL and Load the SQL file, press F9 while selected to your database, and with the SQL File opened. It should create users_information and users_identifiers.
 5. Make sure to edit the config to what you see fit. To change the default spawning location, use the last part of TPF.sql and change it to what you'd like. That is if you already executed the other part
-6. Fire it up by restarting your server or starting it by hand.
+6. Fire it up by restarting your server.
 
 # DEPENDENCIES
-You need to download mysql-async for this script to work. Please do so with this link:
-
+¤ You need to download mysql-async for this script to work. Please do so with this link:
 https://github.com/brouznouf/fivem-mysql-async
+
+¤ A HeidiSQL database.
 
 
 # VERSIONS
+
+## 1.0.2
+
+¤ A deathsystem originally created by Andyyy (https://discord.gg/aDU36TEheK)
+This makes sure that the position script doesn't override when a player dies, before when you died you immediately respawned last loc, but now you either respawn at the hospital (if you're dead) or revive, if you passed out. 
+
+The passout function doesn't really work, and the help text and the "remaining time til death" disappear from time to time. I don't really know why though. If you have a solve, please contact me.
+
+¤ Configs for the deathsystem added.
 
 ## 1.0.1
 
