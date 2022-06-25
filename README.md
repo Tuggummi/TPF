@@ -29,9 +29,9 @@ https://github.com/brouznouf/fivem-mysql-async
 ## 1.0.2
 
 ¤ A deathsystem originally created by Andyyy (https://discord.gg/aDU36TEheK)
-This makes sure that the position script doesn't override when a player dies, before when you died you immediately respawned last loc, but now you either respawn at the hospital (if you're dead) or revive, if you passed out. 
+This makes sure that the position script doesn't override when a player dies, before when you died you immediately respawned last loc, but now you either respawn at the hospital (if you're dead) or revive, if you're passed out. 
 
-The passout function doesn't really work, and the help text and the "remaining time til death" disappear from time to time. I don't really know why though. If you have a solve, please contact me.
+The passout function doesn't really work, and the help text and the "remaining time 'til death" disappear from time to time. I don't really know why though. If you have a solve, please contact me.
 
 ¤ Configs for the deathsystem added.
 
