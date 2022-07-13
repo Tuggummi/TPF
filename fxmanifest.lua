@@ -5,7 +5,7 @@ game 'gta5'
 
 auhtor 'Tuggummi'
 description 'TPF - A powerful framework created by Tuggummi.'
-version '1.0.0'
+version '1.0.21'
 
 shared_script 'config.lua'
 
