@@ -5,7 +5,7 @@ game 'gta5'
 
 auhtor 'Tuggummi'
 description 'TPF - A powerful framework created by Tuggummi.'
-version '1.0.21'
+version '1.0.3'
 
 shared_script 'config.lua'
 
@@ -13,7 +13,8 @@ shared_script 'config.lua'
 client_script {
     'client/position.lua',
     'client/death.lua',
-    'client/functions.lua'
+    'client/functions.lua',
+    'client/notwanted.lua'
 }
 server_scripts {
     'server/position.lua',

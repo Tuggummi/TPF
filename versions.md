@@ -1,3 +1,22 @@
+## 1.0.3
+
+¤ Added disableWantedLevel which, as it sounds, will disable the wanted level of any player. This can easily be turned on by going into the conifg file and changing the value to true.
+
+## 1.0.21
+
+¤ Update the configuration "autoSaveTimer" to work with seconds instead of milliseconds. This makes the configuration part easier.
+
+¤ Added a version.md file for all versions to be located, so this README isn't filled with version information.
+
+## 1.0.2
+
+¤ A deathsystem originally created by Andyyy (https://discord.gg/aDU36TEheK)
+This makes sure that the position script doesn't override when a player dies, before when you died you immediately respawned last loc, but now you either respawn at the hospital (if you're dead) or revive, if you're passed out.
+
+The passout function doesn't really work, and the help text and the "remaining time 'til death" disappear from time to time. I don't really know why though. If you have a solve, please contact me.
+
+¤ Configs for the deathsystem added.
+
 ## 1.0.1
 
 ¤ I added a configuration part where you can choose if the players' position should be saved or not. The default location is still required to be in the database for the resource to work.
