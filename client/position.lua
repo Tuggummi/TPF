@@ -1,4 +1,4 @@
--- DO NOT EDIT ANYTHING HERE; YOU ARE NOT PERMITTED AND YOU CAN RUIN THE RESOURCE! --
+-- DO NOT EDIT ANYTHING HERE; YOU ARE PROHIBITED AND YOU CAN RUIN THE RESOURCE! --
 
 local location = '^1{^2Position^1}^7 ~ '
 
@@ -20,7 +20,7 @@ function AutoSave()
     Citizen.CreateThread(function()
         saverRunning = true
         while true do 
-            Citizen.Wait(Config.autoSaveTimer)
+            Citizen.Wait(Config.autoSaveTimer * 1000)
             requestSave()
         end
     end)

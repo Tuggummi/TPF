@@ -10,8 +10,8 @@ Config = {
     --If you'd like to save the players position or not. The default location is still needed to be in the DB!
     savePlayerPos = true, 
 
-    --At what interval the resource should save players location. Described in MS.
-    autoSaveTimer = 10000,        --MS
+    --At what interval the resource should save players location. Described in seconds.
+    autoSaveTimer = 20,        --S
 
     --Should the resource print debug messages, only use if the script isn't working or Tuggummi asks you to.
     debugPrint = false,

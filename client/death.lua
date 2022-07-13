@@ -1,3 +1,5 @@
+-- DO NOT EDIT ANYTHING HERE; YOU ARE PROHIBITED AND YOU CAN RUIN THE RESOURCE! --
+
 local location = '^1{^2Deathsystem^1}^7 ~ '
 
 -- Variables

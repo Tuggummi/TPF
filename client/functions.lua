@@ -1,3 +1,5 @@
+-- DO NOT EDIT ANYTHING HERE; YOU ARE PROHIBITED AND YOU CAN RUIN THE RESOURCE! --
+
 -- The notification
 function Notify(msg)
     SetNotificationTextEntry("STRING")
