@@ -32,7 +32,7 @@ AddEventHandler('playerConnecting', function(name, setKickReason, deferrals)
     -- Checks if steam is open, to get a correct answer to steamid
     if not steamid then 
         deferrals.done(Config.noSteam)
-        if Config.debugPrint then print(location .. 'Steam is not open, warning') end
+        print(location .. GetPlayerName(source) .. " denied access to join, no steamid available." )
     else
         deferrals.done()
         if Config.debugPrint then print(location .. 'Steam was open, fetching steamid') end

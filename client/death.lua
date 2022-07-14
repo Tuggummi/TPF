@@ -64,7 +64,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- if the playeris dead then this animation will play.
+-- if the player is dead then this animation will play.
 Citizen.CreateThread(function()
     while true do
 		

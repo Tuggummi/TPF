@@ -9,6 +9,8 @@ I will look into it as fast as humanly possible and solve it.
 _BUT BEFORE you message me_ try to solve it on your own, download the latest version from the GitHub, and it might work.
 Perhaps you changed anything or it was a problem on my end. If it doesn't work when you've downloaded the latest version, message me. Again, on discord: _Tuggummi#7842_
 
+In versions.md you can read about all of the 'bigger' versions that exists. Although not all versions will be available.
+
 #### How to install
 
 1. Download the resource from GitHub and put it in the Resource root folder.
