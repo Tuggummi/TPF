@@ -1,3 +1,16 @@
+## 1.1.0
+
+¤ Fixed up the config for easier configuration and added configuration for all new features. I also added a translations.lua, where you can enter and change all the messages that are sent to players all across the resource.
+
+¤ The deathsystem deleted, it did not work properly so I decided to remove it and i added a revive command instead. When you die, staffs can revive you. The revive command works, even if you aren't dead.
+
+¤ Handle vehicle added, spawn, delete, repair and clean your vehicle!
+~/v - Spawns a vehicle with the specified name.
+~/dv - Deletes the vehicle you in, or closest to.
+~/repair - Repair the vehicle you are in, or closest to.
+~/clean - Cleans the vehicle you are in, or closest to.
+~/fix - Repair and fix the vehicle you are in, or closest to.
+
 ## 1.0.3
 
 ¤ Added disableWantedLevel which, as it sounds, will disable the wanted level of any player. This can easily be turned on by going into the conifg file and changing the value to true.

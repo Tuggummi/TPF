@@ -9,7 +9,17 @@ I will look into it as fast as humanly possible and solve it.
 _BUT BEFORE you message me_ try to solve it on your own, download the latest version from the GitHub, and it might work.
 Perhaps you changed anything or it was a problem on my end. If it doesn't work when you've downloaded the latest version, message me. Again, on discord: _Tuggummi#7842_
 
-In versions.md you can read about all of the 'bigger' versions that exists. Although not all versions will be available.
+In versions.md you can read about some of the versions that exists. Although not all versions will be available.
+
+## Features
+
+¤ Saving location and players identifiers in HeidiSQL. Uses the location on playerSpawn.
+
+¤ Disables the wanted level, configurable.
+
+¤ Revive command, heals or revives the player if your dead or alive.
+
+¤ Handle vehicle, repair, clean, spawn and delete vehicles.
 
 #### How to install
 
@@ -29,17 +39,26 @@ https://github.com/brouznouf/fivem-mysql-async
 
 # VERSIONS
 
+## 1.1.0
+
+¤ Fixed up the config for easier configuration and added configuration for all new features. I also added a translations.lua, where you can enter and change all the messages that are sent to players all across the resource.
+
+¤ The deathsystem deleted, it did not work properly so I decided to remove it and i added a revive command instead. When you die, staffs can revive you. The revive command works, even if you aren't dead.
+
+¤ Handle vehicle added, spawn, delete, repair and clean your vehicle!
+~/v - Spawns a vehicle with the specified name.
+~/dv - Deletes the vehicle you in, or closest to.
+~/repair - Repair the vehicle you are in, or closest to.
+~/clean - Cleans the vehicle you are in, or closest to.
+~/fix - Repair and fix the vehicle you are in, or closest to.
+
+¤ No wanted level added, disables the wanted level. Configurable in the config.
+
 ## 1.0.3
 
 ¤ Added disableWantedLevel which, as it sounds, will disable the wanted level of any player. This can easily be turned on by going into the conifg file and changing the value to true.
 
 _Sidenote:_ Right now I'm working on making the script save player position when you leave the server instead of every 10 seconds. Instead saving like every 10 minutes, or less, of course that will be changeable.
-
-## 1.0.21
-
-¤ Update the configuration "autoSaveTimer" to work with seconds instead of milliseconds. This makes the configuration part easier.
-
-¤ Added a version.md file for all versions to be located, so this README isn't filled with version information.
 
 ### Comming soon
 

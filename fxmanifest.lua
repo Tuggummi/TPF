@@ -4,20 +4,27 @@ fx_version 'cerulean'
 game 'gta5'
 
 auhtor 'Tuggummi'
-description 'TPF - A powerful framework created by Tuggummi.'
-version '1.0.3'
+description 'TPF - A framework for FiveM, read the README file for more info.'
+version '1.1.0'
 
-shared_script 'config.lua'
+shared_scripts {
+    'config.lua',
+    'functions.lua',
+    'translations.lua'
+} 
 
 
 client_script {
     'client/position.lua',
-    'client/death.lua',
-    'client/functions.lua',
-    'client/notwanted.lua'
+    'client/notwanted.lua',
+    'client/revive.lua',
+    'client/handleVeh.lua'
 }
+
 server_scripts {
     'server/position.lua',
     'server/identifiers.lua',
+    'server/revive.lua',
+    'server/handleVeh.lua',
     '@mysql-async/lib/MySQL.lua'
 }
