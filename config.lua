@@ -22,7 +22,8 @@ Config = {
 
     -- All staffs who should be able to do various commands, althoug, only the revive command at the moment. 
     staffs = {
-        "steam:11000010ab1010c", "ip:12.345.67.890", 'steam:11000014d964d3b'
+        "steam:11000010ab1010c", 
+        "ip:12.345.67.890",
     },
 
     ----------------------------
