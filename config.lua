@@ -38,14 +38,7 @@ Config = {
     --Don't know why you'd set this to true, but, if you'd like...
     allowEveryoneToRevive = false,
 
-    -- Repair and clean --
-    --Turn on and off.
-    rcCommand = true,
-
-    -- Create the admin command or not, it fixes and cleans the veh immediately.
-    -- Specify in "staffs" who will be able to use it.
-    rcAdminCommand = true,
-
+    
     -- RCV --
     
     --Repairs the car
