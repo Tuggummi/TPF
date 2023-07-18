@@ -3,26 +3,20 @@ _W = {
     -- Ändra webhooksen till det du önskar här.
 
     -- När pedmodeller ändras
-    pedWebhook =
-    "https://discord.com/api/webhooks/1086625110372388955/emmtZ-IfTYYS62_xKPzqPmy1aMReS7v_0I_Zvwf7Ywq1jdHgAKKXi5SCDgrEjxWOB-Ci",
+    pedWebhook = "DISCORD_WEBHOOK",
 
     -- När vapen tillges
-    weaponWebhook =
-    "https://discord.com/api/webhooks/1086625110372388955/emmtZ-IfTYYS62_xKPzqPmy1aMReS7v_0I_Zvwf7Ywq1jdHgAKKXi5SCDgrEjxWOB-Ci",
+    weaponWebhook = "DISCORD_WEBHOOK",
 
     -- När vapen plockas bort
-    removeWeaponWebhook =
-    "https://discord.com/api/webhooks/1086625110372388955/emmtZ-IfTYYS62_xKPzqPmy1aMReS7v_0I_Zvwf7Ywq1jdHgAKKXi5SCDgrEjxWOB-Ci",
+    removeWeaponWebhook = "DISCORD_WEBHOOK",
 
     -- När en spelare ansluter till servern
-    playerConnectWebhook =
-    "https://discord.com/api/webhooks/1004510218975203429/cU1UJldBNMZT6Y8KQrjPQgr31ksKke1E55ujSbUiA7a63LGRHtEB-mZTjD90sLgIF3ZG",
+    playerConnectWebhook = "DISCORD_WEBHOOK",
 
     -- När en spelare lämnar servern
-    playerDisconnectWebhook =
-    "https://discord.com/api/webhooks/1004513872255918210/QN0rgFUTdD2e__ovCwpFLAWeFZIKdAzdV1bj8teg7vcrKL_ATecdZ2_GYpdMvlLNZ-sw",
+    playerDisconnectWebhook = "DISCORD_WEBHOOK",
 
     -- När kommandot /revive används
-    reviveWebhook =
-    "https://discord.com/api/webhooks/1086625110372388955/emmtZ-IfTYYS62_xKPzqPmy1aMReS7v_0I_Zvwf7Ywq1jdHgAKKXi5SCDgrEjxWOB-Ci",
+    reviveWebhook = "DISCORD_WEBHOOK",
 }

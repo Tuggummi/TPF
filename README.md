@@ -26,7 +26,7 @@ Vänligen observera att **TPF** fortfarande är under utveckling och det kan fin
 
 1. Ladda ner senaste verisionen av scriptet: [Github Latest](https://github.com/Tuggummi/TPFV2/releases)
 2. Ändra mappnamnet till "TPF" och placera mappen i resources. FXManifest bör vara i resources/TPF/fxmanifest.lua
-3. Konfiguera [Tillstånd](config/permissions.lua), [webhooks](config/webhooks.lua) och de globala [inställningarna](config/config.lua)
+3. Konfiguera [tillstånd](config/permissions.lua), [webhooks](config/webhooks.lua) och de globala [inställningarna](config/config.lua).
 4. Kör [TPF.sql](TPF.sql) i din MySQL databas. Se till att du har en databas markerad i HeidiSQL.
 5. Aktivera servern via "ensure TPF" eller "start TPF" i din server.cfg.
 6. Starta om servern.
