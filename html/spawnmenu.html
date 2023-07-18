@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <script src="script.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="container">
+      <button id="spawnmenu-exit">Avbryt</button>
+
+      <img src="images/fulllogo.png" class="server-image" />
+
+      <div class="characters">
+        <div class="character" id="character-1">
+          <h4 id="character-name">Skapa Karaktär</h4>
+          <p id="character-age"></p>
+          <p id="character-gender"></p>
+          <p id="character-job"></p>
+          <div class="character-buttons">
+            <button class="character-button" id="spawn-character">
+              Använd
+            </button>
+            <button class="character-button" id="active-character">
+              Aktiv
+            </button>
+            <button class="character-button" id="delete-character">
+              Radera
+            </button>
+            <button class="character-button" id="delete-character-abort">
+              Avbryt
+            </button>
+            <button class="character-button" id="delete-character-confirm">
+              Säker?
+            </button>
+            <button class="character-button" id="create-character">
+              Skapa
+            </button>
+          </div>
+        </div>
+        <div class="character" id="character-2">
+          <h4 id="character-name">Skapa Karaktär</h4>
+          <p id="character-age"></p>
+          <p id="character-gender"></p>
+          <p id="character-job"></p>
+          <div class="character-buttons">
+            <button class="character-button" id="spawn-character">
+              Använd
+            </button>
+            <button class="character-button" id="active-character">
+              Aktiv
+            </button>
+            <button class="character-button" id="delete-character">
+              Radera
+            </button>
+            <button class="character-button" id="delete-character-abort">
+              Avbryt
+            </button>
+            <button class="character-button" id="delete-character-confirm">
+              Säker?
+            </button>
+            <button class="character-button" id="create-character">
+              Skapa
+            </button>
+          </div>
+        </div>
+        <div class="character" id="character-3">
+          <h4 id="character-name">Skapa Karaktär</h4>
+          <p id="character-age"></p>
+          <p id="character-gender"></p>
+          <p id="character-job"></p>
+          <div class="character-buttons">
+            <button class="character-button" id="spawn-character">
+              Använd
+            </button>
+            <button class="character-button" id="active-character">
+              Aktiv
+            </button>
+            <button class="character-button" id="delete-character">
+              Radera
+            </button>
+            <button class="character-button" id="delete-character-abort">
+              Avbryt
+            </button>
+            <button class="character-button" id="delete-character-confirm">
+              Säker?
+            </button>
+            <button class="character-button" id="create-character">
+              Skapa
+            </button>
+          </div>
+        </div>
+        <div class="character" id="character-4">
+          <h4 id="character-name">Skapa Karaktär</h4>
+          <p id="character-age"></p>
+          <p id="character-gender"></p>
+          <p id="character-job"></p>
+          <div class="character-buttons">
+            <button
+              class="character-button"
+              id="spawn-character"
+              data-new="false"
+            >
+              Använd
+            </button>
+            <button class="character-button" id="active-character">
+              Aktiv
+            </button>
+            <button class="character-button" id="delete-character">
+              Radera
+            </button>
+            <button class="character-button" id="delete-character-abort">
+              Avbryt
+            </button>
+            <button class="character-button" id="delete-character-confirm">
+              Säker?
+            </button>
+            <button class="character-button" id="create-character">
+              Skapa
+            </button>
+          </div>
+        </div>
+
+        <div id="spawning-locations" data-cid="">
+          <h4>Välj Position</h4>
+          <div id="spawnLocations">
+            <div class="spawnLocation selected" id="last-location">
+              Senaste Position
+            </div>
+            <div class="spawnLocation" id="plaza">Torget</div>
+            <div class="spawnLocation" id="prison">Fängelset</div>
+            <div class="spawnLocation" id="military">Militär Basen</div>
+          </div>
+          <button id="spawnBtn">Spawna</button>
+        </div>
+
+        <div class="create-character">
+          <h4>Skapa karaktär</h4>
+
+          <form action="#" id="create-character-form" method="post">
+            <input type="hidden" id="cindex" value="nil" />
+            <input type="text" id="firstname" placeholder="Förnamn" required />
+            <input type="text" id="lastname" placeholder="Efternamn" required />
+            <input
+              type="text"
+              id="dob-input"
+              placeholder="Födelsedag"
+              required
+            />
+            <select id="gender-select" required>
+              <option value="male">Man</option>
+              <option value="female">Kvinna</option>
+            </select>
+            <div class="create-buttons">
+              <button type="button" class="create-button" id="confirm-create">
+                Skapa
+              </button>
+              <button type="button" class="create-button" id="abort-create">
+                Avbryt
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <img src="images/logo.png" class="server-watermark" />
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+      flatpickr("#dob-input", {
+        dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "j F, Y",
+        maxDate: "today",
+        minDate: "1900-01",
+      });
+    </script>
+  </body>
+</html>
