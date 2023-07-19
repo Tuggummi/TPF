@@ -18,14 +18,14 @@ Vänligen observera att **TPF** fortfarande är under utveckling och det kan fin
 
 ¤ Hantera fordon ~ Genom kommando kan du ta fram, reparera och radera fordon.
 
-¤ Konfigurerande ~ Konfiguera till dina preferenser i [config.lua](config/config.lua) och [permissions.lua](config/permissions.lua)
+¤ Konfigurerande ~ Konfiguera till dina preferenser i [config.lua](config/config.lua) och [permissions.lua](config/permissions.lua).
 
 ¤ Loggande ~ Många av åvanstående händelser loggas till discord kanaler. Konfiguera webhooksen [här](config/webhooks.lua).
 
 ## Installation
 
-1. Ladda ner senaste verisionen av scriptet: [Github Latest](https://github.com/Tuggummi/TPF/releases/latest)
-2. Ändra mappnamnet till "TPF" och placera mappen i resources. FXManifest bör vara i resources/TPF/fxmanifest.lua
+1. Ladda ner senaste verisionen av scriptet: [Senaste Verisionen](https://github.com/Tuggummi/TPF/releases/latest)
+2. Ändra mappnamnet till "TPF" och placera mappen i resources. FXManifest bör vara i resources/TPF/fxmanifest.lua.
 3. Konfiguera [tillstånd](config/permissions.lua), [webhooks](config/webhooks.lua) och de globala [inställningarna](config/config.lua). Ändra även bilderna i html/images, för att passa dig.
 4. Kör [TPF.sql](TPF.sql) i din MySQL databas. Se till att du har en databas markerad i HeidiSQL.
 5. Aktivera servern via "ensure TPF" eller "start TPF" i din server.cfg.

@@ -1,3 +1,52 @@
+-- Version Checking
+local currentVersion = '2.0.0'
+PerformHttpRequest('https://api.github.com/repos/Tuggummi/TPF/releases/latest', function(statusCode, response, headers)
+    if statusCode == 200 then
+        local releaseData = json.decode(response)
+        local latestVersion = releaseData.tag_name
+        local location = ""
+
+        if currentVersion ~= latestVersion then
+            local errorMessage = string.format(
+                "\n\27[31m=================================================\n" ..
+                "\27[35mETT FEL UPPSTOD: Din skript version är gammal!\27[0m\n" ..
+                "Lokala versionen: \27[31m%s\27[0m\n" ..
+                "Senaste versionen: \27[32m%s\27[0m\n" ..
+                "\27[34mVänligen hämta den senaste versionen från GitHub.\n" ..
+                "\27[35mhttps://github.com/Tuggummi/TPF/releases/latest\n" ..
+                "\27[31m=================================================",
+                currentVersion,
+                latestVersion
+            )
+
+
+            local redColorCode = "\27[31m"
+            local resetColorCode = "\27[0m"
+
+            Citizen.CreateThread(function()
+                -- Delay the printing of the error message
+                Citizen.Wait(2000) -- Adjust the delay as needed
+
+                -- Set the console text color to red
+                print(redColorCode .. errorMessage .. resetColorCode)
+            end)
+        else
+            local successMessage = "Din skriptversion har den senaste utgåvan: " .. latestVersion
+
+            local greenColorCode = "\27[32m"
+            local resetColorCode = "\27[0m"
+
+            Citizen.CreateThread(function()
+                -- Delay the printing of the success message
+                Citizen.Wait(2000) -- Adjust the delay as needed
+
+                -- Set the console text color to green
+                print(greenColorCode .. successMessage .. resetColorCode)
+            end)
+        end
+    end
+end)
+
 -- Hämtar identifierare och sätter in dem i databasen vid anslutning. Inför även informationen för spawning!
 AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
     local src = source
