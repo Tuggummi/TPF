@@ -28,7 +28,7 @@ _P = {
     -- Handle Vehicle --
 
     -- Tillåt alla spelare att använda alla funktioner | /v, /dv, /fix
-    allowEveryoneHandle = true, -- Standard: false, true/false
+    allowEveryoneHandle = false, -- Standard: false, true/false
 
     -- Tillåt alla spelare att använda /v och /dv
     allowEveryoneManage = false, -- Standard: false, true/false
