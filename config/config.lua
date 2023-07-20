@@ -5,6 +5,11 @@ _C = {
 
     -- Här kan ni ändra --
 
+    -- Om spelaren sitter i ett fordon medan de aktiverar /v, ska fordonet de sitter i bli raderat, eller ska den inte göra någonting.
+    -- true: Fordonet raderas, den nya spawnar.
+    -- false: Spelaren får ett meddelande om vad som gäller, och inget fordon spawnar.
+    removeVehicleOnSpawn = true, -- Standard: true | true/false
+
     -- Tiden mellan varje sparning för Pedmodell, Position och Vapen i sekunder
     autoSaveTimer = 20, -- Standard: 20
 

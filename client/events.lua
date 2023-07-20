@@ -88,6 +88,17 @@ end)
 RegisterNetEvent('TPF:client_spawnVehicle')
 AddEventHandler('TPF:client_spawnVehicle', function(vehicleName)
     local source = source
+
+    if IsPedInAnyVehicle(PlayerPedId(), false) then
+        if _C.removeVehicleOnSpawn then
+            local veh = GetVehiclePedIsIn(PlayerPedId())
+            SetEntityAsMissionEntity(veh, true, true)
+            DeleteVehicle(veh)
+        else
+            TPFNotify('~r~Du måste ta bort fordonet du sitter i för att ta fram ett nytt.')
+            return
+        end
+    end
     if not IsModelInCdimage(vehicleName) or not IsModelAVehicle(vehicleName) then
         TPFNotify("~r~Fordonet vars namn du anget existerar inte! " .. vehicleName .. "")
         return
