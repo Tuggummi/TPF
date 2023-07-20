@@ -9,7 +9,7 @@ PerformHttpRequest('https://api.github.com/repos/Tuggummi/TPF/releases/latest', 
         if currentVersion ~= latestVersion then
             local errorMessage = string.format(
                 "\n\27[31m=================================================\n" ..
-                "\27[35mETT FEL UPPSTOD: Din skript version är gammal!\27[0m\n" ..
+                "\27[35mDin skript version är gammal!\27[0m\n" ..
                 "Lokala versionen: \27[31m%s\27[0m\n" ..
                 "Senaste versionen: \27[32m%s\27[0m\n" ..
                 "\27[34mVänligen hämta den senaste versionen från GitHub.\n" ..
