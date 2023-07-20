@@ -88,6 +88,10 @@ end)
 RegisterNetEvent('TPF:client_spawnVehicle')
 AddEventHandler('TPF:client_spawnVehicle', function(vehicleName)
     local source = source
+    if not IsModelInCdimage(vehicleName) or not IsModelAVehicle(vehicleName) then
+        TPFNotify("~r~Fordonet vars namn du anget existerar inte! " .. vehicleName .. "")
+        return
+    end
 
     if IsPedInAnyVehicle(PlayerPedId(), false) then
         if _C.removeVehicleOnSpawn then
@@ -99,11 +103,6 @@ AddEventHandler('TPF:client_spawnVehicle', function(vehicleName)
             return
         end
     end
-    if not IsModelInCdimage(vehicleName) or not IsModelAVehicle(vehicleName) then
-        TPFNotify("~r~Fordonet vars namn du anget existerar inte! " .. vehicleName .. "")
-        return
-    end
-
     RequestModel(vehicleName)
 
     while not HasModelLoaded(vehicleName) do
