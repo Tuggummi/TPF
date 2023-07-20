@@ -1,5 +1,5 @@
 -- Version Checking
-local currentVersion = '2.0.1'
+local currentVersion = 'v2.0.1'
 PerformHttpRequest('https://api.github.com/repos/Tuggummi/TPF/releases/latest', function(statusCode, response, headers)
     if statusCode == 200 then
         local releaseData = json.decode(response)
