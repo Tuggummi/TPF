@@ -13,7 +13,25 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
--- Dumping structure for table base.identifiers
+-- Dumping structure for table accounts
+CREATE TABLE IF NOT EXISTS `accounts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `transaction-id` varchar(50) DEFAULT NULL,
+  `steamid` varchar(255) DEFAULT NULL,
+  `firstname` varchar(255) DEFAULT NULL,
+  `lastname` varchar(255) DEFAULT NULL,
+  `balance` float DEFAULT 0,
+  `cash` float DEFAULT 0,
+  `job` varchar(255) DEFAULT NULL,
+  `job_level` varchar(255) DEFAULT '0',
+  `last_paycheck` varchar(255) DEFAULT NULL,
+  `cindex` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table identifiers
 CREATE TABLE IF NOT EXISTS `identifiers` (
   `steamname` varchar(40) DEFAULT NULL,
   `steamid` varchar(40) NOT NULL,
@@ -28,7 +46,53 @@ CREATE TABLE IF NOT EXISTS `identifiers` (
 
 -- Data exporting was unselected.
 
--- Dumping structure for table base.users
+-- Dumping structure for table job
+CREATE TABLE IF NOT EXISTS `job` (
+  `title` varchar(50) DEFAULT NULL,
+  `job_name` varchar(50) DEFAULT NULL,
+  `job_level` varchar(50) DEFAULT NULL,
+  `salary` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- Dumping data for table job: ~16 rows (approximately)
+/*!40000 ALTER TABLE `job` DISABLE KEYS */;
+INSERT INTO `job` (`title`, `job_name`, `job_level`, `salary`) VALUES
+	('Arbetsförmedlingen', 'unemployed', '0', 2000),
+	('Undersökterska', 'ambulance', '0', 2000),
+	('Sjuksköterska', 'ambulance', '1', 3000),
+	('Sjukvårdare', 'ambulance', '2', 5000),
+	('Läkare', 'ambulance', '3', 7000),
+	('Överläkare', 'ambulance', '4', 9000),
+	('Biträdande Regionschef', 'ambulance', '5', 12000),
+	('Regionschef', 'ambulance', '6', 17000),
+	('Polisassistent', 'police', '0', 2500),
+	('Polis', 'police', '1', 4000),
+	('Polisinspektör', 'police', '2', 6000),
+	('Kriminalinspektör', 'police', '3', 8000),
+	('Polisintendent', 'police', '4', 10000),
+	('Biträdande Rikspolischef', 'police', '5', 15000),
+	('Rikspolischef', 'police', '6', 20000),
+	('Utvecklare', 'developer', '0', 20000);
+/*!40000 ALTER TABLE `job` ENABLE KEYS */;
+
+
+-- Dumping structure for table transactions
+CREATE TABLE IF NOT EXISTS `transactions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `transaction-id` varchar(255) DEFAULT NULL,
+  `steamid` varchar(255) DEFAULT NULL,
+  `amount` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `reciver` varchar(255) DEFAULT NULL,
+  `note` varchar(2555) DEFAULT NULL,
+  `date` varchar(255) DEFAULT NULL,
+  `cindex` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table users
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `steamname` varchar(40) DEFAULT NULL,
@@ -45,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `active` varchar(255) DEFAULT '0',
   `cindex` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Data exporting was unselected.
 

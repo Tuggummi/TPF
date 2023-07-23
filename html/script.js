@@ -1,6 +1,90 @@
+// ECONOMY Functions
+
+const propertyOrder = ["id", "money", "type", "reciver", "date"];
+function createTransactionElement(transaction) {
+  const transactionElement = document.createElement("div");
+  transactionElement.classList.add("transaction");
+  transactionElement.id = transaction.id;
+
+  propertyOrder.forEach((key) => {
+    const dataElement = document.createElement("div");
+    dataElement.classList.add("transaction-data");
+    dataElement.id = key;
+    dataElement.textContent = transaction[key];
+    transactionElement.appendChild(dataElement);
+  });
+
+  return transactionElement;
+}
+
+function showTransactions(transactions) {
+  const transactionsContainer = document.getElementById(
+    "transactions-container"
+  );
+
+  transactionsContainer.innerHTML = "";
+
+  if (transactions.length === 0) {
+    const noTransactionsElement = document.createElement("div");
+    noTransactionsElement.classList.add("no-transactions");
+    noTransactionsElement.textContent = "Inga transaktioner har gjorts.";
+    transactionsContainer.appendChild(noTransactionsElement);
+  } else {
+    transactions.forEach((transaction) => {
+      const transactionElement = createTransactionElement(transaction);
+      transactionsContainer.appendChild(transactionElement);
+    });
+  }
+}
+
+// Global
+
 const resource = "tpf";
 window.addEventListener("message", (event) => {
   const data = event.data;
+
+  // Economy
+
+  var bank = document.getElementById("bank-balance");
+  var cash = document.getElementById("cash-balance");
+
+  if (data.type == "openATM") {
+    bank.style.display = "none";
+    cash.style.display = "none";
+
+    const bankContainer = document.querySelector(".bank-container");
+    bankContainer.style.display = "block";
+
+    var firstname = data.account.firstname;
+    var lastname = data.account.lastname;
+
+    showTransactions(data.account.transactions);
+
+    const availableBalance = document.getElementById("available-balance");
+    availableBalance.textContent = data.account.balance + " KR";
+
+    const transactionIdElement = document.getElementById("transaction-id");
+    transactionIdElement.textContent = data.account.id;
+
+    const welcomeMessage = document.getElementById("welcome-user");
+    welcomeMessage.textContent = "Välkommen " + firstname + " " + lastname;
+  }
+
+  if (data.type == "closeATM") {
+    location.reload();
+    const bankContainer = document.querySelector(".bank-container");
+    bankContainer.style.display = "none";
+    bank.style.display = "none";
+    cash.style.display = "none";
+  }
+
+  if (data.type == "updateMoney") {
+    bank.textContent = "SEK " + data.bank;
+    cash.textContent = "SEK " + data.cash;
+  }
+
+  // Spawnmenu
+
   let container = document.getElementById("container");
 
   if (data.type === "openspawn") {
@@ -10,7 +94,7 @@ window.addEventListener("message", (event) => {
       var character = characters[i];
       var ci = character.cindex;
 
-      if (character) {
+      if (character.cindex) {
         var characterName = document.querySelector(
           `#character-${ci} #character-name`
         );
@@ -61,9 +145,8 @@ window.addEventListener("message", (event) => {
           deleteBtn.style.display = "block";
         }
 
-        var spawnCharacterBtn = document.getElementById("spawn-character");
         if (character.new == true) {
-          spawnCharacterBtn.dataset.new = "true";
+          spawnBtn.dataset.new = "true";
         }
       }
     }
@@ -80,9 +163,137 @@ window.addEventListener("message", (event) => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Economy
+  const exitSveaBank = document.getElementById("exit-bank");
+  exitSveaBank.addEventListener("click", () => {
+    axios.post(`https://${resource}/closeATM`).then((response) => {
+      location.reload();
+      const bankContainer = document.querySelector(".bank-container");
+      bankContainer.style.display = "none";
+    });
+  });
+
+  const sendTransactionMessage = document.getElementById("transaction-send");
+  sendTransactionMessage.addEventListener("click", (e) => {
+    e.preventDefault();
+    let firstnameInput = document.getElementById("reciver-firstname");
+    let lastnameInput = document.getElementById("reciver-lastname");
+    let transactionIdInput = document.getElementById("reciver-id");
+    let amountInput = document.getElementById("transaction-amount");
+    let noteInput = document.getElementById("transaction-note");
+
+    let firstname = firstnameInput.value;
+    let lastname = lastnameInput.value;
+    let transactionId = transactionIdInput.value;
+    let amount = amountInput.value.trim();
+    let note = noteInput.value;
+    if (!firstname) {
+      firstnameInput.focus();
+      return;
+    }
+    if (!lastname) {
+      lastnameInput.focus();
+      return;
+    }
+    if (!transactionId) {
+      transactionIdInput.focus();
+      return;
+    }
+    if (!amount) {
+      amountInput.focus();
+      return;
+    }
+
+    const validAmountRegex = /^\d+(\.\d{1,2})?$/;
+
+    if (validAmountRegex.test(amount)) {
+      amount = parseFloat(amount);
+    } else {
+      alert(`"` + amount + `" är inte ett gilltigt belopp.`);
+      amountInput.focus();
+      return;
+    }
+
+    if (!note) {
+      note = "Ingen Anteckning";
+    }
+
+    const newTransaction = {
+      firstname: firstname,
+      lastname: lastname,
+      transactionId: transactionId,
+      amount: amount,
+      note: note,
+    };
+
+    axios.post(`https://${resource}/sendTransaction`, {
+      transaction: newTransaction,
+    });
+  });
+
+  const withdrawMoney = document.querySelector(".withdraw-btn");
+  if (withdrawMoney) {
+    withdrawMoney.addEventListener("click", () => {
+      let amountInput = document.querySelector(".withdraw-amount");
+      let amount = amountInput.value.trim();
+      if (!amount) {
+        amountInput.focus();
+        return;
+      }
+
+      const validAmountRegex = /^\d+(\.\d{1,2})?$/;
+
+      if (validAmountRegex.test(amount)) {
+        amount = parseFloat(amount);
+      } else {
+        alert(`"` + amount + `" är inte ett gilltigt belopp.`);
+        amountInput.focus();
+        return;
+      }
+
+      axios.post(`https://${resource}/withdrawMoney`, { amount: amount });
+    });
+  }
+
+  const depositMoney = document.querySelector(".deposit-btn");
+  if (depositMoney) {
+    depositMoney.addEventListener("click", () => {
+      let amountInput = document.querySelector(".deposit-amount");
+      let amount = amountInput.value.trim();
+      if (!amount) {
+        amountInput.focus();
+        return;
+      }
+
+      const validAmountRegex = /^\d+(\.\d{1,2})?$/;
+
+      if (validAmountRegex.test(amount)) {
+        amount = parseFloat(amount);
+      } else {
+        alert(`"` + amount + `" är inte ett gilltigt belopp.`);
+        amountInput.focus();
+        return;
+      }
+
+      axios.post(`https://${resource}/depositMoney`, { amount: amount });
+    });
+  }
+
+  // Spawnmenu
+
   let spawnmenuCancelBtn = document.getElementById("spawnmenu-exit");
   spawnmenuCancelBtn.addEventListener("click", () => {
-    axios.post(`https://${resource}/closeSpawnmenu`, {});
+    if (spawnmenuCancelBtn.textContent == "Avbryt") {
+      axios.post(`https://${resource}/closeSpawnmenu`, {});
+    } else if ((spawnmenuCancelBtn.textContent = "Tillbaka")) {
+      var characterDivs = document.querySelectorAll(".character");
+      characterDivs.forEach((character) => {
+        character.style.display = "flex";
+        var spawnLocationDiv = document.getElementById("spawning-locations");
+        spawnLocationDiv.style.display = "none";
+      });
+      spawnmenuCancelBtn.textContent = "Avbryt";
+    }
   });
 
   var spawnBtns = document.querySelectorAll(`#spawn-character`);
@@ -117,6 +328,8 @@ document.addEventListener("DOMContentLoaded", () => {
         spawnLocationDiv.dataset.cid = cid;
         spawnLocationDiv.style.display = "flex";
       });
+
+      spawnmenuCancelBtn.textContent = "Tillbaka";
     });
   });
   deleteBtns.forEach((deleteBtn, i) => {

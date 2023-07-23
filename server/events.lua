@@ -227,7 +227,7 @@ RegisterServerEvent('TPF:server:spawnmenu_leaving', function(identifier)
     if success == 1 then
         return
     else
-        print('Kunde inte sätta aktiva karaktären till inaktiv, identifierare: ' .. identifier)
+        return
     end
 end)
 
@@ -289,51 +289,54 @@ RegisterServerEvent("TPF:server_playerConnectLog", function(src, playerIdentifie
 end)
 
 -- Sätter spelarens pedmodell till den agivna.
-RegisterServerEvent("TPF:server_setPlayerModel", function(playerModel, newPlayerModel, oldModelName, newModelName)
-    local src = source
-    local oldModel = playerModel
-    local newModel = newPlayerModel
-    local oldModelName = oldModelName
-    local newModelName = newModelName
+RegisterServerEvent("TPF:server_setPlayerModel",
+    function(playerModel, newPlayerModel, oldModelName, newModelName, playerWeapons)
+        local src = source
+        local oldModel = playerModel
+        local newModel = newPlayerModel
+        local oldModelName = oldModelName
+        local newModelName = newModelName
 
 
-    local steamname = GetPlayerName(src)
-    local steamid = GetPlayerIdentifier(src, 0)
+        local steamname = GetPlayerName(src)
+        local steamid = GetPlayerIdentifier(src, 0)
 
-    if src == nil then
-        print(location .. "[^1ERR^7] source not found. (TPF/server/events.lua:8)")
-        return
-    end
+        if src == nil then
+            print(location .. "[^1ERR^7] source not found. (TPF/server/events.lua:8)")
+            return
+        end
 
-    if oldModel == nil then
-        TriggerClientEvent("chatMessage", src, "[TPF] ~r~[ERR]~s~", { 148, 0, 211 },
-            "Något gick snett, om problemet fortsätter kontakta Tuggummi.")
-        print(location .. "[^1ERR^7] old model not found. (TPF/server/events.lua:14)")
-        return
-    end
+        if oldModel == nil then
+            TriggerClientEvent("chatMessage", src, "[TPF] ~r~[ERR]~s~", { 148, 0, 211 },
+                "Något gick snett, om problemet fortsätter kontakta Tuggummi.")
+            print(location .. "[^1ERR^7] old model not found. (TPF/server/events.lua:14)")
+            return
+        end
 
-    if newModel == nil then
-        TriggerClientEvent("chatMessage", src, "[TPF] ~r~[ERR]~s~", { 148, 0, 211 },
-            "Något gick snett, om problemet fortsätter kontakta Tuggummi.")
-        print(location .. "[^1ERR^7] new model not found. (TPF/server/events.lua:20)")
-        return
-    end
+        if newModel == nil then
+            TriggerClientEvent("chatMessage", src, "[TPF] ~r~[ERR]~s~", { 148, 0, 211 },
+                "Något gick snett, om problemet fortsätter kontakta Tuggummi.")
+            print(location .. "[^1ERR^7] new model not found. (TPF/server/events.lua:20)")
+            return
+        end
 
-    SetPlayerModel(source, newModel)
+        SetPlayerModel(source, newModel)
 
-    local title = GetPlayerName(source) .. " ändrar Ped Modell"
-    local message = "**" ..
-        GetPlayerName(source) ..
-        "** byter sin ped modell \n**från:** *" ..
-        oldModelName ..
-        "*\n**till:** *" ..
-        newModelName ..
-        "*\n\n`ServerID: " .. source .. "`\n`Steamnamn: " .. steamname .. "`\n`SteamID: " .. steamid .. "`"
+        local title = GetPlayerName(source) .. " ändrar Ped Modell"
+        local message = "**" ..
+            GetPlayerName(source) ..
+            "** byter sin ped modell \n**från:** *" ..
+            oldModelName ..
+            "*\n**till:** *" ..
+            newModelName ..
+            "*\n\n`ServerID: " .. source .. "`\n`Steamnamn: " .. steamname .. "`\n`SteamID: " .. steamid .. "`"
 
-    TriggerEvent("TPF:server_discordLog", title, message, "ped")
+        TriggerEvent("TPF:server_discordLog", title, message, "ped")
 
-    TriggerClientEvent("chatMessage", src, "[TPF]", { 148, 0, 211 }, "Du böt din ped till " .. newModelName)
-end)
+        TriggerClientEvent('TPF:client_setPlayerModel', source, playerWeapons)
+
+        TriggerClientEvent("chatMessage", src, "[TPF]", { 148, 0, 211 }, "Du böt din ped till " .. newModelName)
+    end)
 
 -- Event för att discord logga en händelse.
 RegisterServerEvent("TPF:server_discordLog", function(title, message, trigger, player, target)
@@ -383,6 +386,10 @@ RegisterServerEvent("TPF:server_discordLog", function(title, message, trigger, p
         end
     end
 
+    if trigger == "transaction" then
+        webhook = _W.transactionsWebhook
+    end
+
     local embed = {
         {
             ["color"] = color,
@@ -398,7 +405,7 @@ RegisterServerEvent("TPF:server_discordLog", function(title, message, trigger, p
         json.encode({ username = "TPF Logs", embeds = embed }), { ['Content-Type'] = 'application/json' })
 end)
 
-RegisterServerEvent('TPF:server:spawnmenu_open', function(source, init)
+RegisterServerEvent('TPF:server:spawnmenu_open', function(source)
     local identifier = GetPlayerIdentifier(source, 0)
 
     local result = MySQL.Sync.fetchAll(
@@ -407,11 +414,14 @@ RegisterServerEvent('TPF:server:spawnmenu_open', function(source, init)
             ['@steamid'] = identifier
         })
 
+    local init = true
+
     if result ~= nil and #result > 0 then
         local characters = {}
         for i = 1, #result do
             local active = false
             if result[i].active == "1" then
+                init = false
                 active = true
             end
             local new = false
@@ -634,9 +644,19 @@ RegisterServerEvent('TPF:server:spawnmenu_delete', function(cindex)
     })
 
     if success == 1 then
-        TriggerClientEvent("TPF:client:spawnmenu_close", src)
-        Citizen.Wait(500)
-        TriggerEvent("TPF:server:spawnmenu_open", src)
+        MySQL.Async.execute('DELETE FROM accounts WHERE steamid = @steamid AND cindex = @cindex', {
+            ['@steamid'] = identifier,
+            ['@cindex'] = cindex,
+        }, function(rowsAffected)
+            MySQL.Async.execute('DELETE FROM transactions WHERE steamid = @steamid AND cindex = @cindex', {
+                ['@steamid'] = identifier,
+                ['@cindex'] = cindex,
+            }, function()
+                TriggerClientEvent("TPF:client:spawnmenu_close", src)
+                Citizen.Wait(500)
+                TriggerEvent("TPF:server:spawnmenu_open", src)
+            end)
+        end)
     else
         print("Något gick fel: Försökte att radera " ..
             identifier ..
@@ -646,4 +666,607 @@ RegisterServerEvent('TPF:server:spawnmenu_delete', function(cindex)
             "Något gick snett: Det gick inte att radera karaktären. Kontakta support.")
         return
     end
+end)
+
+
+-- Economy
+
+RegisterServerEvent('TPF:server:economy_openATM', function(src)
+    local playerId = tonumber(src)
+    local identifier = GetPlayerIdentifier(playerId, 0)
+
+    MySQL.Async.fetchAll('SELECT gender, cindex FROM users WHERE steamid = @steamid AND active = 1', {
+        ['@steamid'] = identifier,
+    }, function(result)
+        if result and result[1] then
+            local cindex = result[1].cindex
+            local gender = result[1].gender
+
+            MySQL.Async.fetchAll(
+                'SELECT `transaction-id`, firstname, lastname, balance, job FROM accounts WHERE steamid = @steamid AND cindex = @cindex',
+                {
+                    ['@steamid'] = identifier,
+                    ['@cindex'] = cindex
+                }, function(res)
+                    if res[1] then
+                        local transactionId = res[1]['transaction-id']
+                        local firstname     = res[1].firstname
+                        local lastname      = res[1].lastname
+                        local balance       = res[1].balance
+                        local job           = res[1].job
+
+                        local accountData   = {
+                            id           = transactionId,
+                            firstname    = firstname,
+                            lastname     = lastname,
+                            balance      = balance,
+                            job          = job,
+                            transactions = {},
+                            cindex       = cindex,
+                        }
+
+                        MySQL.Async.fetchAll(
+                            'SELECT `transaction-id`, amount, type, reciver, date FROM transactions WHERE steamid = @steamid AND cindex = @cindex ORDER BY id DESC',
+                            {
+                                ['@steamid'] = identifier,
+                                ['@cindex'] = cindex,
+                            },
+                            function(res2, err)
+                                if err then
+                                    print('Error fetching transactions: ' .. err)
+                                    return
+                                end
+
+                                if res2 then
+                                    -- Loopa igenom alla transactions, skapa en array med alla transaktioner och lägg till dem i accountData.
+                                    for i = 1, #res2 do
+                                        local transaction = {
+                                            id      = res2[i]['transaction-id'],
+                                            money   = res2[i].amount,
+                                            type    = res2[i].type,
+                                            reciver = res2[i].reciver,
+                                            date    = res2[i].date,
+                                        }
+                                        table.insert(accountData.transactions, transaction)
+                                    end
+                                end
+                                TriggerClientEvent('TPF:client:economy_openATM', src, accountData, gender)
+                            end
+                        )
+                    else
+                        TriggerEvent('TPF:server:economy_openAccount', src, identifier)
+                        TriggerClientEvent('chatMessage', src, "TPF", { 148, 0, 211 },
+                            "Hittade inget konto. Skapar ett nytt...")
+                        return
+                    end
+                end
+            )
+        else
+            TriggerClientEvent('chatMessage', src, "TPF", { 148, 0, 211 },
+                "Det gick inte att hämta ditt bankkonto. Kontakta Support.")
+            print('Misslyckades att hämta ett bankkonto för ' ..
+                identifier .. ". Kunde inte hämta 'cindex' från users.")
+            print(result)
+            return
+        end
+    end)
+end)
+
+RegisterServerEvent('TPF:server:economy_openAccount', function(src, identifier)
+    MySQL.Async.fetchAll("SELECT firstname, lastname, job, cindex FROM users WHERE steamid = @steamid AND active = true",
+        {
+            ["@steamid"] = identifier
+        }, function(result)
+            if result[1] then
+                local firstname     = result[1].firstname
+                local lastname      = result[1].lastname
+                local job           = result[1].job
+                local cindex        = result[1].cindex
+                local transactionId = generateRandomId()
+
+                MySQL.Async.fetchScalar('SELECT id FROM accounts WHERE steamid = @steamid AND cindex = @cindex', {
+                    ['@steamid'] = identifier,
+                    ['@cindex']  = cindex,
+                }, function(res)
+                    if res then
+                        TriggerClientEvent('chatMessage', src, "TPF", { 148, 0, 211 },
+                            "Det gick inte att öppna ett bankkonto. Kontakta Support.")
+                        print('Misslyckades att öppna ett bankkonto för ' ..
+                            identifier .. ". Användaren har redan ett bankkonto med cindex " .. cindex)
+                        print(res)
+                        return
+                    else
+                        local startingBalance = _C.startingBalance
+                        MySQL.Async.execute(
+                            'INSERT INTO accounts (`transaction-id`, steamid, firstname, lastname, balance, job, cindex) VALUES (@transactionId, @steamid, @firstname, @lastname, @balance, @job, @cindex)',
+                            {
+                                ['@transactionId'] = transactionId,
+                                ['@steamid']       = identifier,
+                                ['@firstname']     = firstname,
+                                ['@lastname']      = lastname,
+                                ['@balance']       = startingBalance,
+                                ['@job']           = job,
+                                ['@cindex']        = cindex,
+                            }, function(rowsAffected)
+                                if rowsAffected > 0 then
+                                    local sender = "Svea Bank"
+                                    local subject = "Välkommen till oss"
+                                    local message = "Som välkomstbonus har du fått ~g~2000kr. "
+                                    TriggerClientEvent('TPF:client:economy_notifyUser', src, message, sender, subject,
+                                        "CHAR_SVEA_BANK", 9, true, 40)
+                                    print(identifier .. ' öppnade ett bankkonto.')
+                                    return
+                                else
+                                    TriggerClientEvent('chatMessage', src, "TPF", { 148, 0, 211 },
+                                        "Det gick inte att öppna ett bankkonto. Kontakta Support.")
+                                    print('Misslyckades att öppna ett bankkonto för ' ..
+                                        identifier .. ". Kunde inte införa i database.")
+                                    return
+                                end
+                            end
+                        )
+                    end
+                end)
+            else
+                TriggerClientEvent('chatMessage', src, "TPF", { 148, 0, 211 },
+                    "Det gick inte att öppna ett bankkonto. Kontakta Support.")
+                print('Misslyckades att öppna ett bankkonto för ' ..
+                    identifier .. ". Kunde inte hämta 'cindex' från users.")
+                print(result)
+                return
+            end
+        end)
+end)
+
+
+RegisterServerEvent('TPF:server:economy_sendTransaction', function(transaction)
+    local source = source
+    local identifier = GetPlayerIdentifier(source, 0)
+
+    MySQL.Async.fetchScalar('SELECT cindex FROM users WHERE steamid = @steamid AND active = 1', {
+        ["@steamid"] = identifier,
+    }, function(cindex)
+        if cindex then
+            MySQL.Async.fetchAll(
+                'SELECT `transaction-id`, balance, firstname, lastname FROM accounts WHERE steamid = @steamid AND cindex = @cindex',
+                {
+                    ['@steamid'] = identifier,
+                    ['@cindex'] = cindex
+                }, function(result)
+                    if result then
+                        local reciverId = transaction.transactionId
+                        if reciverId == result[1]['transaction-id'] then
+                            TriggerClientEvent('TPF:client:economy:callback_nui', source, true,
+                                "~r~Du kan inte skicka pengar till ~b~dig själv.")
+                            return
+                        end
+                        MySQL.Async.fetchAll(
+                            'SELECT steamid, firstname, lastname, cindex FROM accounts WHERE `transaction-id` = @reciverId',
+                            {
+                                ['@reciverId'] = reciverId
+                            }, function(reciver)
+                                if reciver[1] then
+                                    if reciver[1].firstname == transaction.firstname then
+                                        local transactionAmount = transaction.amount
+                                        if tonumber(transactionAmount) > result[1].balance then
+                                            TriggerClientEvent('TPF:client:economy:callback_nui', source, true,
+                                                "~r~Du har inte tillräckligt mycket ~g~pengar ~r~i ditt ~b~saldo!")
+                                            return
+                                        end
+
+                                        MySQL.Async.execute(
+                                            "UPDATE accounts SET balance = balance - @amount WHERE steamid = @steamid AND cindex = @cindex",
+                                            {
+                                                ['@amount'] = transactionAmount,
+                                                ['@steamid'] = identifier,
+                                                ['@cindex'] = cindex
+                                            }, function(rowsAffected)
+                                                if rowsAffected == 1 then
+                                                    MySQL.Async.execute(
+                                                        "UPDATE accounts SET balance = balance + @amount WHERE `transaction-id` = @reciverId",
+                                                        {
+                                                            ['@amount'] = transactionAmount,
+                                                            ['@reciverId'] = reciverId,
+                                                        }, function(rowsAffected2)
+                                                            if rowsAffected2 == 1 then
+                                                                local transactionId = generateRandomId()
+                                                                local amount = 'SEK' .. transactionAmount
+                                                                local type = "Överförning"
+                                                                local transactionReciver = "Till " ..
+                                                                    reciver[1].firstname .. ' ' .. reciver[1].lastname
+                                                                local note = transaction.note
+                                                                local date = os.date('%d/%m-%Y')
+
+                                                                -- Adding the transaction for the user who made the transaction
+                                                                MySQL.Async.execute(
+                                                                    'INSERT INTO transactions (`transaction-id`, steamid, amount, type, reciver, note, date, cindex) VALUES (@transactionId, @steamid, @amount, @type, @reciver, @note, @date, @cindex)',
+                                                                    {
+                                                                        ['@transactionId'] = transactionId,
+                                                                        ['@steamid'] = identifier,
+                                                                        ['@amount'] = amount,
+                                                                        ['@type'] = type,
+                                                                        ['@reciver'] = transactionReciver,
+                                                                        ['@note'] = note,
+                                                                        ['@date'] = date,
+                                                                        ['@cindex'] = cindex
+                                                                    }, function(rowsAffected3)
+                                                                        if rowsAffected3 == 1 then
+                                                                            local reciverSteam = reciver[1].steamid
+                                                                            local transactionSender = "Av " ..
+                                                                                result[1].firstname ..
+                                                                                " " .. result[1].lastname
+                                                                            local reciverCindex = reciver[1].cindex
+                                                                            MySQL.Async.execute(
+                                                                                "INSERT INTO transactions (`transaction-id`, steamid, amount, type, reciver, note, date, cindex) VALUES (@transactionId, @steamid, @amount, @type, @reciver, @note, @date, @cindex)",
+                                                                                {
+                                                                                    ['@transactionId'] = transactionId,
+                                                                                    ['@steamid'] = reciverSteam,
+                                                                                    ['@amount'] = amount,
+                                                                                    ['@type'] = type,
+                                                                                    ['@reciver'] = transactionSender,
+                                                                                    ['@note'] = note,
+                                                                                    ['@date'] = date,
+                                                                                    ['@cindex'] = reciverCindex
+                                                                                }, function(success)
+                                                                                    if success == 1 then
+                                                                                        local reciverFirstname = reciver
+                                                                                            [1].firstname
+                                                                                        local reciverLastname = reciver
+                                                                                            [1].lastname
+                                                                                        local message = "~g~Skickade ~b~" ..
+                                                                                            amount ..
+                                                                                            " ~g~till " ..
+                                                                                            reciverFirstname ..
+                                                                                            " " .. reciverLastname .. "."
+                                                                                        TriggerClientEvent(
+                                                                                            'TPF:client:economy:callback_nui',
+                                                                                            source, false, message)
+
+
+                                                                                        local title =
+                                                                                        "En transaktion genomfördes."
+
+                                                                                        local discordMessage =
+                                                                                            '*' .. result[1].firstname ..
+                                                                                            ' ' ..
+                                                                                            result[1].lastname ..
+                                                                                            '* överförde **' ..
+                                                                                            amount ..
+                                                                                            '** till *' ..
+                                                                                            reciverFirstname ..
+                                                                                            ' ' ..
+                                                                                            reciverLastname ..
+                                                                                            '*.\n' ..
+                                                                                            result[1].firstname ..
+                                                                                            '\n`' ..
+                                                                                            identifier ..
+                                                                                            '`\n`cindex: ' ..
+                                                                                            cindex ..
+                                                                                            '`\n`ID: ' ..
+                                                                                            result[1]['transaction-id'] ..
+                                                                                            '`\n\n' ..
+                                                                                            reciverFirstname ..
+                                                                                            '\n`' ..
+                                                                                            reciverSteam ..
+                                                                                            '`\n`cindex: ' ..
+                                                                                            reciverCindex ..
+                                                                                            '`\n`ID: ' ..
+                                                                                            reciverId ..
+                                                                                            '`\n\n## Transaktions ID: ' ..
+                                                                                            transactionId
+
+                                                                                        TriggerEvent(
+                                                                                            'TPF:server:economy_discordLog',
+                                                                                            title, discordMessage,
+                                                                                            "transaction")
+                                                                                    end
+                                                                                end)
+                                                                        end
+                                                                    end)
+                                                            else
+                                                                TriggerClientEvent(
+                                                                    'TPF:client:economy:callback_nui', source,
+                                                                    true,
+                                                                    "~r~Misslyckades att lägga till pengar i mottagarens konto! ~b~Kontakta Support.")
+                                                                print('Transaktion Misslyckades för ' ..
+                                                                    identifier ..
+                                                                    ' Kunde inte lägga till ' .. transactionAmount)
+                                                                return
+                                                            end
+                                                        end)
+                                                else
+                                                    TriggerClientEvent('TPF:client:economy:callback_nui', source,
+                                                        true,
+                                                        "~r~Misslyckades att ta bort pengar från ditt konto! ~b~Kontakta Support.")
+                                                    print('Transaktion Misslyckades för ' ..
+                                                        identifier .. ' Kunde inte ta bort ' .. transactionAmount)
+                                                    return
+                                                end
+                                            end)
+                                    else
+                                        TriggerClientEvent('TPF:client:economy:callback_nui', source, true,
+                                            "~r~Konto nummrets namn matchade inte namnet du angav. ~b~Kontrollera namnet och ~g~Försök igen.")
+                                        return
+                                    end
+                                else
+                                    TriggerClientEvent('TPF:client:economy:callback_nui', source, true,
+                                        "~r~Kontots namn matchade inget aktivt konto. ~b~Kontrollera Transaktions ID't och ~g~Försök igen.")
+                                    return
+                                end
+                            end)
+                    else
+                        local error = "~r~Vi hittade inget saldo för ditt konto! ~b~Kontakta Support."
+                        TriggerClientEvent('TPF:client:economy:callback_nui', source, true, error)
+                        print('Transaktionen misslyckades, kunde inte hämta ett bankkonto för ' ..
+                            identifier .. ". Kunde inte hämta 'balance' från accounts.")
+                    end
+                end)
+        else
+            local error = "~r~Vi hittade inget 'cindex' för din karaktär! ~b~Kontakta Support."
+            TriggerClientEvent('TPF:client:economy:callback_nui', source, true, error)
+            print('Transaktionen misslyckades, kunde inte hämta ett bankkonto för ' ..
+                identifier .. ". Kunde inte hämta 'cindex' från users.")
+        end
+    end)
+end)
+
+
+RegisterServerEvent('TPF:server:economy_displayBalance', function(source)
+    source = source
+    local identifier = GetPlayerIdentifier(source, 0)
+
+    MySQL.Async.fetchScalar('SELECT cindex FROM users WHERE steamid = @steamid and active = 1', {
+        ['@steamid'] = identifier
+    }, function(cindex)
+        if cindex then
+            MySQL.Async.fetchAll('SELECT balance, cash FROM accounts WHERE steamid = @steamid AND cindex = @cindex', {
+                ['@steamid'] = identifier,
+                ['@cindex'] = cindex,
+            }, function(result)
+                if #result > 0 then
+                    local bank = result[1].balance
+                    local cash = result[1].cash
+                    TriggerClientEvent('TPF:client:economy_displayBalance', source, bank, cash)
+                end
+            end)
+        end
+    end)
+end)
+
+RegisterServerEvent('TPF:server:economy_distributeSalary', function(src)
+    local identifier = GetPlayerIdentifier(src, 0)
+    MySQL.Async.fetchScalar('SELECT cindex FROM users WHERE steamid = @steamid AND active = 1', {
+        ['@steamid'] = identifier
+    }, function(cindex)
+        if cindex then
+            MySQL.Async.fetchAll('SELECT steamid, balance, cash, job, job_level FROM accounts WHERE cindex = @cindex', {
+                ['@cindex'] = cindex
+            }, function(account)
+                if account and account[1] then
+                    local steamid  = account[1].steamid
+                    local job      = account[1].job
+                    local jobLevel = account[1].job_level
+                    local balance  = account[1].balance
+                    local cash     = account[1].cash
+
+                    MySQL.Async.fetchAll(
+                        'SELECT title, salary FROM job WHERE job_name = @job AND job_level = @jobLevel', {
+                            ['@job'] = job,
+                            ['@jobLevel'] = jobLevel
+                        }, function(jobInfo)
+                            if jobInfo and jobInfo[1] then
+                                local title = jobInfo[1].title
+                                local salary = jobInfo[1].salary
+                                local lastPaycheck = os.date("%d/%m-%Y %X")
+
+                                MySQL.Async.execute(
+                                    'UPDATE accounts SET balance = balance + @salary, last_paycheck = @lastPaycheck WHERE steamid = @steamid AND cindex = @cindex',
+                                    {
+                                        ['@salary']       = salary,
+                                        ['@lastPaycheck'] = lastPaycheck,
+                                        ['@steamid']      = steamid,
+                                        ['@cindex']       = cindex,
+                                    }, function(rowsAffected)
+                                        if rowsAffected > 0 then
+                                            if job == "developer" then
+                                                local newBalance = balance + salary
+                                                TriggerClientEvent('TPF:client:economy_notifySalary', src, salary,
+                                                    newBalance, cash)
+                                                return
+                                            end
+
+                                            local transactionId = generateRandomId()
+                                            local amount = "SEK" .. salary
+                                            local type = "Lön"
+                                            local reciver = "Från " .. title
+                                            local date = os.date('%d/%m-%Y') -- 7/21-2023
+                                            local query =
+                                            "INSERT INTO transactions (`transaction-id`, steamid, amount, type, reciver, date, cindex) VALUES (@transactionId, @steamid, @amount, @type, @reciver, @date, @cindex)"
+                                            MySQL.Async.execute(query,
+                                                {
+                                                    ['@transactionId'] = transactionId,
+                                                    ['@steamid']       = steamid,
+                                                    ['@amount']        = amount,
+                                                    ['@type']          = type,
+                                                    ['@reciver']       = reciver,
+                                                    ['@date']          = date,
+                                                    ['@cindex']        = cindex
+                                                }, function(success)
+                                                    if success > 0 then
+                                                        local newBalance = balance + salary
+                                                        TriggerClientEvent('TPF:client:economy_notifySalary', src, salary,
+                                                            newBalance, cash)
+                                                        return
+                                                    else
+                                                        print('Kunde inte betala ut lön till ' .. steamid)
+                                                        return
+                                                    end
+                                                end)
+                                        end
+                                    end)
+                            end
+                        end)
+                end
+            end)
+        end
+    end)
+end)
+
+RegisterServerEvent('TPF:server:economy_withdraw', function(src, amount)
+    local identifier = GetPlayerIdentifier(src, 0)
+
+    MySQL.Async.fetchScalar('SELECT cindex FROM users WHERE steamid = @steamid AND active = 1', {
+        ['@steamid'] = identifier,
+    }, function(cindex)
+        if cindex then
+            MySQL.Async.fetchScalar('SELECT balance FROM accounts WHERE steamid = @steamid and cindex = @cindex', {
+                ['@steamid'] = identifier,
+                ['@cindex']  = cindex,
+            }, function(availableBalance)
+                if availableBalance then
+                    if amount > availableBalance then
+                        --err handeling
+                        TriggerClientEvent('TPF:client:economy:callback_nui', src, true,
+                            "~r~Din begäran är för stor för ditt ~b~tillgängliga saldo.")
+                        return
+                    end
+
+                    MySQL.Async.execute(
+                        'UPDATE accounts SET balance = balance - @amount, cash = cash + @amount WHERE steamid = @steamid AND cindex = @cindex',
+                        {
+                            ['@amount']  = amount,
+                            ['@steamid'] = identifier,
+                            ['@cindex']  = cindex,
+                        }, function(rowsAffected)
+                            if rowsAffected > 0 then
+                                --success
+                                local transactionId = generateRandomId()
+                                local type          = "Uttag"
+                                local reciver       = "Kontanter"
+                                local date          = os.date('%d/%m-%Y')
+                                amount              = 'SEK' .. tostring(amount)
+
+                                MySQL.Async.execute(
+                                    "INSERT INTO transactions (`transaction-id`, steamid, amount, type, reciver, date, cindex) VALUES (@transactionId, @steamid, @amount, @type, @reciver, @date, @cindex)",
+                                    {
+                                        ['@transactionId'] = transactionId,
+                                        ['@steamid']       = identifier,
+                                        ['@amount']        = amount,
+                                        ['@type']          = type,
+                                        ['@reciver']       = reciver,
+                                        ['@date']          = date,
+                                        ['@cindex']        = cindex
+                                    }, function(success)
+                                        if success == 1 then
+                                            local message = "~g~Tog ut ~b~" .. amount .. " ~g~kontanter."
+                                            TriggerClientEvent('TPF:client:economy:callback_nui', src, false, message)
+                                        else
+                                            TriggerClientEvent('TPF:client:economy:callback_nui', src, true,
+                                                "~r~Kunde inte lägga till en transaktion till uttaget. ~b~Kontakta Support.")
+                                            print('Kunde inte lägga till transaktion för uttag på ' ..
+                                                amount .. " " .. identifier .. " cindex: " .. cindex)
+                                            return
+                                        end
+                                    end)
+                            else
+                                TriggerClientEvent('TPF:client:economy:callback_nui', src, true,
+                                    "~r~Kunde inte uppdatera ditt saldo eller kontanter. ~b~Kontakta Support.")
+                                print('Kunde inte uppdatera ' ..
+                                    identifier .. " banksaldo och kontanter. Cindex: " .. cindex .. " Belopp: " .. amount)
+                                return
+                            end
+                        end)
+                else
+                    TriggerClientEvent('TPF:client:economy:callback_nui', src, true,
+                        "~r~Hittade inte ett kopplat konto till dig. ~b~Kontakta Support.")
+                    print('Kunde inte hitta ett konto kopplat till ' .. identifier .. ' karaktären nr ' .. cindex)
+                    return
+                end
+            end)
+        else
+            TriggerClientEvent('TPF:client:economy:callback_nui', src, true,
+                "~r~Kunde inte hitta cindex för din karaktär. ~b~Kontakta Support.")
+            print('Kunde inte hitta cindex för aktiva karaktären hos ' .. identifier)
+            return
+        end
+    end)
+end)
+RegisterServerEvent('TPF:server:economy_deposit', function(src, amount)
+    local identifier = GetPlayerIdentifier(src, 0)
+
+    MySQL.Async.fetchScalar('SELECT cindex FROM users WHERE steamid = @steamid AND active = 1', {
+        ['@steamid'] = identifier,
+    }, function(cindex)
+        if cindex then
+            MySQL.Async.fetchScalar('SELECT cash FROM accounts WHERE steamid = @steamid and cindex = @cindex', {
+                ['@steamid'] = identifier,
+                ['@cindex']  = cindex,
+            }, function(availableCash)
+                if availableCash then
+                    if amount > availableCash then
+                        --err handeling
+                        TriggerClientEvent('TPF:client:economy:callback_nui', src, true,
+                            "~r~Din begäran är för stor för dina ~b~kontanter.")
+                        return
+                    end
+
+                    MySQL.Async.execute(
+                        'UPDATE accounts SET balance = balance + @amount, cash = cash - @amount WHERE steamid = @steamid AND cindex = @cindex',
+                        {
+                            ['@amount']  = amount,
+                            ['@steamid'] = identifier,
+                            ['@cindex']  = cindex,
+                        }, function(rowsAffected)
+                            if rowsAffected > 0 then
+                                --success
+                                local transactionId = generateRandomId()
+                                local type          = "Insättning"
+                                local reciver       = "Kontanter"
+                                local date          = os.date('%d/%m-%Y')
+                                amount              = 'SEK' .. tostring(amount)
+
+                                MySQL.Async.execute(
+                                    "INSERT INTO transactions (`transaction-id`, steamid, amount, type, reciver, date, cindex) VALUES (@transactionId, @steamid, @amount, @type, @reciver, @date, @cindex)",
+                                    {
+                                        ['@transactionId'] = transactionId,
+                                        ['@steamid']       = identifier,
+                                        ['@amount']        = amount,
+                                        ['@type']          = type,
+                                        ['@reciver']       = reciver,
+                                        ['@date']          = date,
+                                        ['@cindex']        = cindex
+                                    }, function(success)
+                                        if success == 1 then
+                                            local message = "~g~Satt in ~b~" .. amount .. " ~g~kontanter."
+                                            TriggerClientEvent('TPF:client:economy:callback_nui', src, false, message)
+                                        else
+                                            TriggerClientEvent('TPF:client:economy:callback_nui', src, true,
+                                                "~r~Kunde inte lägga till en transaktion till insättningen. ~b~Kontakta Support.")
+                                            print('Kunde inte lägga till transaktion för insättningen på ' ..
+                                                amount .. " " .. identifier .. " cindex: " .. cindex)
+                                            return
+                                        end
+                                    end)
+                            else
+                                TriggerClientEvent('TPF:client:economy:callback_nui', src, true,
+                                    "~r~Kunde inte uppdatera ditt saldo eller kontanter. ~b~Kontakta Support.")
+                                print('Kunde inte uppdatera ' ..
+                                    identifier .. " banksaldo och kontanter. Cindex: " .. cindex .. " Belopp: " .. amount)
+                                return
+                            end
+                        end)
+                else
+                    TriggerClientEvent('TPF:client:economy:callback_nui', src, true,
+                        "~r~Hittade inte ett kopplat konto till dig. ~b~Kontakta Support.")
+                    print('Kunde inte hitta ett konto kopplat till ' .. identifier .. ' karaktären nr ' .. cindex)
+                    return
+                end
+            end)
+        else
+            TriggerClientEvent('TPF:client:economy:callback_nui', src, true,
+                "~r~Kunde inte hitta cindex för din karaktär. ~b~Kontakta Support.")
+            print('Kunde inte hitta cindex för aktiva karaktären hos ' .. identifier)
+            return
+        end
+    end)
 end)

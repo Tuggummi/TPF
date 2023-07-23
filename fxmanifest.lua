@@ -24,11 +24,12 @@ server_scripts {
     '@mysql-async/lib/MySQL.lua',
 }
 
-ui_page 'html/spawnmenu.html'
+ui_page 'html/tpf.html'
 
 files {
-    'html/spawnmenu.html',
+    'html/tpf.html',
     'html/style.css',
+    'html/fonts.css',
     'html/script.js',
     'html/images/*',
 }

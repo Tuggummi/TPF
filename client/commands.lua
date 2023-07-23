@@ -42,7 +42,8 @@ RegisterCommand("ped", function(source, args)
     local oldModelName = GetEntityArchetypeName(playerPed)
     local newModelName = newPlayerModel
 
-    TriggerServerEvent("TPF:server_setPlayerModel", playerModel, newPlayerModel, oldModelName, newModelName)
+    TriggerServerEvent("TPF:server_setPlayerModel", playerModel, newPlayerModel, oldModelName, newModelName,
+        playerWeapons)
 end)
 
 -- Tar bort angivna namnet från spelaren som aktiverar, alternativt alla om inget är angett!
@@ -100,4 +101,19 @@ RegisterCommand('spawnmenu', function(source)
 
     local src = GetPlayerServerId(PlayerId())
     TriggerServerEvent('TPF:server:spawnmenu_open', src)
+end)
+
+-- Economy
+
+RegisterCommand('atm', function()
+    local playerPed = GetPlayerPed(-1)
+    local playerCoords = GetEntityCoords(playerPed)
+
+    local closestATM = findClosestATM(playerCoords)
+    if closestATM then
+        SetNewWaypoint(closestATM.x, closestATM.y)
+        TriggerEvent('chatMessage', "TPF", { 148, 0, 211 }, "Satt färdbeskrivning till närmaste bankomat.")
+    else
+        TriggerEvent('chatMessage', "TPF", { 148, 0, 211 }, "Hittade ingen banokmat nära dig...")
+    end
 end)

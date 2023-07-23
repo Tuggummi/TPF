@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "Asap-SemiBold-Italic";
+  src: url("fonts/Asap-SemiBold-Italic.ttf.woff") format("woff"),
+    url("fonts/Asap-SemiBold-Italic.ttf.svg#Asap-SemiBold-Italic") format("svg"),
+    url("fonts/Asap-SemiBold-Italic.ttf.eot"),
+    url("fonts/Asap-SemiBold-Italic.ttf.eot?#iefix") format("embedded-opentype");
+  font-weight: normal;
+  font-style: normal;
+}

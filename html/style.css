@@ -1,13 +1,461 @@
 body {
   padding: 0;
   margin: 0;
-  font-family: sans-serif;
+  font-family: asap-semibold-italic, arial, sans-serif;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 button,
 select {
   cursor: pointer;
 }
+
+/* ECONOMY */
+
+.money-container {
+  position: absolute;
+  top: 40px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.bank-balance {
+  font-size: 28px;
+  color: blue;
+  font-weight: 900;
+}
+
+.cash-balance {
+  font-size: 22px;
+  color: green;
+  font-weight: 900;
+}
+
+.bank-container {
+  background-color: #f6f6f1;
+  width: 100vw;
+  min-height: 100vh;
+  height: 100%;
+  overflow-x: hidden;
+  display: none; /* none */
+}
+
+.bank-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 25%;
+  align-items: center;
+  width: 100vw;
+  height: 70px;
+  padding: 0 20px;
+  position: sticky;
+}
+
+.bank-info p {
+  position: absolute;
+  right: 190px;
+  top: 8px;
+  font-size: 20px;
+}
+
+.bank-logo {
+  display: flex;
+  flex-direction: row;
+  height: 70px;
+  position: absolute;
+  left: 20px;
+}
+
+.svea-exit {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 80px;
+  height: 35px;
+  border-radius: 3px;
+  outline: none;
+  border: none;
+  background-color: rgba(210, 4, 4, 0.7);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.svea-exit:hover {
+  background-color: rgb(255, 1, 1);
+}
+
+.svea-logo {
+  margin-right: 15px;
+}
+
+.bank-logo h3 {
+  margin-top: 18px;
+  font-size: 25px;
+  margin-left: 15px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 100px;
+  margin-left: -60px;
+}
+
+.navbar a {
+  margin-top: 3px;
+  text-decoration: underline;
+  color: #595959;
+  font-size: 20px;
+  transition: all 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #000;
+}
+
+.svea-headers {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 20px;
+  margin-bottom: 0;
+}
+
+.svea-headers-logo {
+  height: 250px;
+  margin-bottom: -30px;
+}
+
+.svea-headers p {
+  margin-top: 0;
+  font-size: 25px;
+}
+
+.available-balance {
+  position: relative;
+  left: 200px;
+  top: -150px;
+  background-color: #fff;
+  box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.1);
+  min-width: 300px;
+  width: fit-content;
+  max-width: 500px;
+  height: 150px;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: -100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.available-balance h1 {
+  font-size: 25px;
+  margin-bottom: 0;
+}
+
+.available-balance h3 {
+  position: relative;
+  font-size: 30px;
+}
+
+.transaction-id {
+  position: relative;
+  right: -1400px;
+  top: -225px;
+  background-color: #fff;
+  box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.1);
+  min-width: 300px;
+  width: fit-content;
+  max-width: 500px;
+  height: 150px;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: -100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.transaction-id h1 {
+  font-size: 25px;
+  margin-bottom: 0;
+}
+
+.transaction-id h3 {
+  position: relative;
+  font-size: 30px;
+}
+
+.svea-main {
+  display: grid;
+  grid-template-columns: 40% 30% 30%;
+  gap: 20px;
+}
+
+.svea-transactions {
+  grid-column: 1 / 2;
+  width: fit-content;
+  padding: 20px;
+}
+
+.svea-transactions-line {
+  width: 300px;
+  position: absolute;
+  left: 0;
+  margin-top: -15px;
+  margin-left: 20px;
+}
+
+.transactions {
+  display: flex;
+  flex-direction: column;
+}
+
+.transaction {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 2px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+#id {
+  font-weight: bold;
+  border-right: 2px solid #ccc;
+  padding: 5px;
+  border-radius: 3px;
+  width: 80px;
+}
+
+#money {
+  border-right: 2px solid #ccc;
+  padding: 5px;
+  border-radius: 3px;
+  min-width: 100px;
+  width: fit-content;
+  max-width: 200px;
+}
+
+#type {
+  border-right: 2px solid #ccc;
+  padding: 5px;
+  border-radius: 3px;
+  min-width: 100px;
+  width: fit-content;
+  max-width: 200px;
+}
+#reciver {
+  border-right: 2px solid #ccc;
+  padding: 5px;
+  padding-right: 10px;
+  border-radius: 3px;
+  min-width: 120px;
+  width: max-content;
+  max-width: 175px;
+}
+#date {
+  border-right: 2px solid #ccc;
+  padding: 5px;
+  border-radius: 3px;
+  min-width: 100px;
+  width: fit-content;
+  max-width: 200px;
+}
+
+#money {
+  font-style: italic;
+}
+
+.svea-withdraw {
+  grid-column: 2 / 3;
+  margin-left: 90px;
+}
+
+.svea-deposit {
+  grid-column: 3 / 4;
+}
+
+.svea-withdraw,
+.svea-deposit {
+  margin-top: 22px;
+  background-color: #f6f6f1;
+  padding: 20px;
+  border-radius: 5px;
+  width: 300px;
+}
+
+.svea-withdraw h1,
+.svea-deposit h1 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.svea-withdraw-line,
+.svea-deposit-line {
+  margin: 10px 0;
+}
+
+.withdraw-amount,
+.deposit-amount {
+  width: 280px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.withdraw-btn,
+.deposit-btn {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.withdraw-btn:hover,
+.deposit-btn:hover {
+  background-color: #45a049;
+}
+
+.make-transaction {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 120px;
+}
+
+.make-transaction h1 {
+  font-size: 50px;
+  font-weight: bolder;
+  background-image: linear-gradient(to right, #00325c 0%, #00aece 100%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+
+#make-a-transaction {
+  width: 796px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 2px 5px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 9px;
+  background-color: #fbfbf7;
+}
+
+#make-a-transaction h6 {
+  font-size: 20px;
+  margin-bottom: 0;
+  font-weight: normal;
+}
+
+#make-a-transaction hr {
+  width: 140px;
+  text-align: left;
+  position: relative;
+  left: -327px;
+}
+
+.reciver-info {
+  display: flex;
+  gap: 60px;
+  justify-content: center;
+  align-items: center;
+}
+
+.reciver-info-input {
+  text-align: center;
+  width: 200px;
+  height: 35px;
+  font-size: 20px;
+  outline: none;
+  border: none;
+  border-radius: 7px;
+  padding: 3px;
+  margin: 10px;
+  background-color: #00aece;
+  color: #fff;
+  background-image: linear-gradient(to left, #00325c 0%, #00aece 100%);
+}
+
+#reciver-lastname {
+  background-image: none;
+  background-color: #00325c;
+}
+
+#reciver-id {
+  background-image: linear-gradient(to right, #00325c 0%, #00aece 100%);
+}
+
+.transaction-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 180px;
+}
+
+.transaction-info-input {
+  text-align: center;
+  width: 200px;
+  height: 35px;
+  font-size: 20px;
+  outline: none;
+  border: none;
+  border-radius: 7px;
+  padding: 3px;
+  margin: 10px;
+  background-color: #00aece;
+  color: #fff;
+  background-image: linear-gradient(to left, #00325c 0%, #00aece 100%);
+}
+
+#transaction-amount {
+  margin-left: 100px;
+}
+
+#transaction-note {
+  background-image: linear-gradient(to right, #00325c 0%, #00aece 100%);
+}
+
+#transaction-send {
+  margin-top: 30px;
+  margin-left: 315px;
+  background-image: none;
+  background-color: #00325c;
+  font-size: 25px;
+  color: #00aece;
+  height: 40px;
+  width: 180px;
+  transition: all 0.5s ease;
+}
+
+#transaction-send:hover {
+  background-color: #00aece;
+  color: #00325c;
+}
+
+/* SPAWNMENU */
 
 .server-watermark {
   width: 80px;

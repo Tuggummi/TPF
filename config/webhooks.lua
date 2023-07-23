@@ -19,4 +19,7 @@ _W = {
 
     -- När kommandot /revive används
     reviveWebhook = "DISCORD_WEBHOOK",
+
+    -- När en transaktion görs.
+    transactionsWebhook = "DISCORD_WEBHOOK",
 }

@@ -180,3 +180,70 @@ function DeleteTheVehicle(veh, timeoutMax)
         TPFNotify('~g~Fordonet har raderats!')
     end
 end
+
+-- Economy
+
+function DisplayText(text)
+    SetTextComponentFormat("STRING")
+    AddTextComponentString(text)
+    DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+end
+
+function getPedGender()
+    local gender = "male"
+
+    local playerPed = GetPlayerPed(-1)
+    local playerModel = GetEntityArchetypeName(playerPed)
+
+    if string.find(playerModel, "_f_") then
+        gender = "female"
+    end
+
+    return gender
+end
+
+function playAnimation(dict, name, duration)
+    local playerPed = PlayerPedId()
+    local currentWeapon = GetSelectedPedWeapon(playerPed)
+
+    if currentWeapon ~= -1569615261 then
+        local unarmed = GetHashKey('WEAPON_UNARMED')
+        SetCurrentPedWeapon(playerPed, unarmed, true)
+    end
+
+    RequestAnimDict(dict)
+
+    while not HasAnimDictLoaded(dict) do
+        Citizen.Wait(0)
+    end
+
+    TaskPlayAnim(playerPed, dict, name, 8.0, 8.0, duration, 0, 0, false, false, false)
+end
+
+function sendSveaNotification(message, sender, subject, textureDict, iconType, saveToBrief, color)
+    BeginTextCommandThefeedPost('STRING')
+    AddTextComponentSubstringPlayerName(message)
+    ThefeedSetNextPostBackgroundColor(color)
+    EndTextCommandThefeedPostMessagetext(textureDict, textureDict, false, iconType, sender, subject)
+    EndTextCommandThefeedPostTicker(false, saveToBrief)
+end
+
+function ConvertToVector3(coords)
+    return vector3(coords.x, coords.y, coords.z)
+end
+
+function findClosestATM(playerCoord)
+    local closestCoord = nil
+    local closestDistance = 999999.0
+
+    for _, atmCoords in ipairs(atmLocations) do
+        local coords = ConvertToVector3(atmCoords)
+        local distance = #(playerCoord - coords)
+        if distance < closestDistance then
+            closestCoord = coords
+            closestDistance = distance
+        end
+    end
+
+    return closestCoord
+end

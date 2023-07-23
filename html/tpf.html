@@ -2,14 +2,126 @@
 <html lang="en">
   <head>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="fonts.css" />
     <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
     />
-    <script src="script.js" type="text/javascript"></script>
   </head>
   <body>
+    <!-- ECONOMY -->
+
+    <div class="money-container">
+      <div class="bank-balance" id="bank-balance">SEK ...</div>
+      <div class="cash-balance" id="cash-balance">SEK ...</div>
+    </div>
+
+    <div class="bank-container">
+      <div class="bank-info">
+        <div class="bank-logo">
+          <img
+            src="images/svea-logo.png"
+            alt="Svea Bank Logga"
+            class="svea-logo"
+          />
+          <h3>Svea Bank</h3>
+        </div>
+        <div class="navbar">
+          <a href="#deposit">Sätt In</a>
+          <a href="#withdraw">Ta ut</a>
+          <a href="#make-a-transaction">Transaktioner</a>
+        </div>
+
+        <p>Smidigt, smärtfritt och kostnadsfritt</p>
+      </div>
+
+      <div class="svea-headers">
+        <img
+          src="images/svea-logo.png"
+          alt="Svea Bank Logga"
+          class="svea-headers-logo"
+        />
+        <p id="welcome-user">Välkommen</p>
+      </div>
+      <div class="available-balance">
+        <h1>Tillgängligt saldo:</h1>
+        <h3 id="available-balance">5929 KR</h3>
+      </div>
+      <div class="transaction-id">
+        <h1>Transaktions ID:</h1>
+        <h3 id="transaction-id">Hittades Inte...</h3>
+      </div>
+      <div class="svea-main">
+        <div class="svea-transactions">
+          <h1>Transaktioner</h1>
+          <hr class="svea-transactions-line" />
+          <div class="transactions" id="transactions-container"></div>
+        </div>
+        <div class="svea-withdraw">
+          <h1>Ta ut pengar</h1>
+          <hr class="svea-withdraw-line" />
+          <input type="text" class="withdraw-amount" placeholder="Belopp" />
+          <button class="withdraw-btn" id="withdraw-money">Ta ut</button>
+        </div>
+        <div class="svea-deposit">
+          <h1>Sätt in pengar</h1>
+          <hr class="svea-deposit-line" />
+          <input type="text" class="deposit-amount" placeholder="Belopp" />
+          <button class="deposit-btn">Sätt In</button>
+        </div>
+      </div>
+      <div class="make-transaction">
+        <h1>Gör en transaktion</h1>
+        <form action="" id="make-a-transaction">
+          <h6>Mottagare</h6>
+          <hr />
+          <div class="reciver-info">
+            <input
+              type="text"
+              class="reciver-info-input"
+              id="reciver-firstname"
+              placeholder="Förnamn"
+            />
+            <input
+              type="text"
+              class="reciver-info-input"
+              id="reciver-lastname"
+              placeholder="Efternamn"
+            />
+            <input
+              type="text"
+              class="reciver-info-input"
+              id="reciver-id"
+              placeholder="Transaktions ID"
+            />
+          </div>
+          <h6>Transaktion</h6>
+          <hr />
+          <div class="transaction-info">
+            <input
+              type="text"
+              class="transaction-info-input"
+              id="transaction-amount"
+              placeholder="Belopp"
+            />
+            <input
+              type="text"
+              class="transaction-info-input"
+              id="transaction-note"
+              placeholder="Anteckning"
+            />
+          </div>
+          <button class="transaction-info-input" id="transaction-send">
+            Skicka
+          </button>
+        </form>
+      </div>
+
+      <button class="svea-exit" id="exit-bank">Avbryt</button>
+    </div>
+    <!-- SPAWNMENU -->
+
     <div id="container">
       <button id="spawnmenu-exit">Avbryt</button>
 
@@ -100,11 +212,7 @@
           <p id="character-gender"></p>
           <p id="character-job"></p>
           <div class="character-buttons">
-            <button
-              class="character-button"
-              id="spawn-character"
-              data-new="false"
-            >
+            <button class="character-button" id="spawn-character" data-new="">
               Använd
             </button>
             <button class="character-button" id="active-character">
@@ -179,5 +287,6 @@
         minDate: "1900-01",
       });
     </script>
+    <script src="script.js" type="text/javascript"></script>
   </body>
 </html>
