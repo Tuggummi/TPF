@@ -595,3 +595,6 @@ TriggerEvent('chat:addSuggestion', '/weapon', 'Ta fram ett vapen', {
     { name = "vapen", help = "Vapen namnet" },
     { name = "ammo",  help = "Ammunitionen" }
 })
+
+-- atm
+TriggerEvent('chat:addSuggestion', '/atm', 'Få färdbeskrivning till närmaste ATM')
