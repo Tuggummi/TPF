@@ -791,7 +791,7 @@ RegisterServerEvent('TPF:server:economy_openAccount', function(src, identifier)
                                 if rowsAffected > 0 then
                                     local sender = "Svea Bank"
                                     local subject = "Välkommen till oss"
-                                    local message = "Som välkomstbonus har du fått ~g~2000kr. "
+                                    local message = "Som välkomstbonus har du fått ~g~" .. startingBalance .. "kr."
                                     TriggerClientEvent('TPF:client:economy_notifyUser', src, message, sender, subject,
                                         "CHAR_SVEA_BANK", 9, true, 40)
                                     print(identifier .. ' öppnade ett bankkonto.')
