@@ -846,148 +846,154 @@ RegisterServerEvent('TPF:server:economy_sendTransaction', function(transaction)
                                 ['@reciverId'] = reciverId
                             }, function(reciver)
                                 if reciver[1] then
-                                    if reciver[1].firstname == transaction.firstname then
-                                        local transactionAmount = transaction.amount
-                                        if tonumber(transactionAmount) > result[1].balance then
-                                            TriggerClientEvent('TPF:client:economy:callback_nui', source, true,
-                                                "~r~Du har inte tillräckligt mycket ~g~pengar ~r~i ditt ~b~saldo!")
-                                            return
-                                        end
-
-                                        MySQL.Async.execute(
-                                            "UPDATE accounts SET balance = balance - @amount WHERE steamid = @steamid AND cindex = @cindex",
-                                            {
-                                                ['@amount'] = transactionAmount,
-                                                ['@steamid'] = identifier,
-                                                ['@cindex'] = cindex
-                                            }, function(rowsAffected)
-                                                if rowsAffected == 1 then
-                                                    MySQL.Async.execute(
-                                                        "UPDATE accounts SET balance = balance + @amount WHERE `transaction-id` = @reciverId",
-                                                        {
-                                                            ['@amount'] = transactionAmount,
-                                                            ['@reciverId'] = reciverId,
-                                                        }, function(rowsAffected2)
-                                                            if rowsAffected2 == 1 then
-                                                                local transactionId = generateRandomId()
-                                                                local amount = 'SEK' .. transactionAmount
-                                                                local type = "Överförning"
-                                                                local transactionReciver = "Till " ..
-                                                                    reciver[1].firstname .. ' ' .. reciver[1].lastname
-                                                                local note = transaction.note
-                                                                local date = os.date('%d/%m-%Y')
-
-                                                                -- Adding the transaction for the user who made the transaction
-                                                                MySQL.Async.execute(
-                                                                    'INSERT INTO transactions (`transaction-id`, steamid, amount, type, reciver, note, date, cindex) VALUES (@transactionId, @steamid, @amount, @type, @reciver, @note, @date, @cindex)',
-                                                                    {
-                                                                        ['@transactionId'] = transactionId,
-                                                                        ['@steamid'] = identifier,
-                                                                        ['@amount'] = amount,
-                                                                        ['@type'] = type,
-                                                                        ['@reciver'] = transactionReciver,
-                                                                        ['@note'] = note,
-                                                                        ['@date'] = date,
-                                                                        ['@cindex'] = cindex
-                                                                    }, function(rowsAffected3)
-                                                                        if rowsAffected3 == 1 then
-                                                                            local reciverSteam = reciver[1].steamid
-                                                                            local transactionSender = "Av " ..
-                                                                                result[1].firstname ..
-                                                                                " " .. result[1].lastname
-                                                                            local reciverCindex = reciver[1].cindex
-                                                                            MySQL.Async.execute(
-                                                                                "INSERT INTO transactions (`transaction-id`, steamid, amount, type, reciver, note, date, cindex) VALUES (@transactionId, @steamid, @amount, @type, @reciver, @note, @date, @cindex)",
-                                                                                {
-                                                                                    ['@transactionId'] = transactionId,
-                                                                                    ['@steamid'] = reciverSteam,
-                                                                                    ['@amount'] = amount,
-                                                                                    ['@type'] = type,
-                                                                                    ['@reciver'] = transactionSender,
-                                                                                    ['@note'] = note,
-                                                                                    ['@date'] = date,
-                                                                                    ['@cindex'] = reciverCindex
-                                                                                }, function(success)
-                                                                                    if success == 1 then
-                                                                                        local reciverFirstname = reciver
-                                                                                            [1].firstname
-                                                                                        local reciverLastname = reciver
-                                                                                            [1].lastname
-                                                                                        local message = "~g~Skickade ~b~" ..
-                                                                                            amount ..
-                                                                                            " ~g~till " ..
-                                                                                            reciverFirstname ..
-                                                                                            " " .. reciverLastname .. "."
-                                                                                        TriggerClientEvent(
-                                                                                            'TPF:client:economy:callback_nui',
-                                                                                            source, false, message)
-
-
-                                                                                        local title =
-                                                                                        "En transaktion genomfördes."
-
-                                                                                        local discordMessage =
-                                                                                            '*' .. result[1].firstname ..
-                                                                                            ' ' ..
-                                                                                            result[1].lastname ..
-                                                                                            '* överförde **' ..
-                                                                                            amount ..
-                                                                                            '** till *' ..
-                                                                                            reciverFirstname ..
-                                                                                            ' ' ..
-                                                                                            reciverLastname ..
-                                                                                            '*.\n' ..
-                                                                                            result[1].firstname ..
-                                                                                            '\n`' ..
-                                                                                            identifier ..
-                                                                                            '`\n`cindex: ' ..
-                                                                                            cindex ..
-                                                                                            '`\n`ID: ' ..
-                                                                                            result[1]['transaction-id'] ..
-                                                                                            '`\n\n' ..
-                                                                                            reciverFirstname ..
-                                                                                            '\n`' ..
-                                                                                            reciverSteam ..
-                                                                                            '`\n`cindex: ' ..
-                                                                                            reciverCindex ..
-                                                                                            '`\n`ID: ' ..
-                                                                                            reciverId ..
-                                                                                            '`\n\n## Transaktions ID: ' ..
-                                                                                            transactionId
-
-                                                                                        TriggerEvent(
-                                                                                            'TPF:server:economy_discordLog',
-                                                                                            title, discordMessage,
-                                                                                            "transaction")
-                                                                                    end
-                                                                                end)
-                                                                        end
-                                                                    end)
-                                                            else
-                                                                TriggerClientEvent(
-                                                                    'TPF:client:economy:callback_nui', source,
-                                                                    true,
-                                                                    "~r~Misslyckades att lägga till pengar i mottagarens konto! ~b~Kontakta Support.")
-                                                                print('Transaktion Misslyckades för ' ..
-                                                                    identifier ..
-                                                                    ' Kunde inte lägga till ' .. transactionAmount)
-                                                                return
-                                                            end
-                                                        end)
-                                                else
-                                                    TriggerClientEvent('TPF:client:economy:callback_nui', source,
-                                                        true,
-                                                        "~r~Misslyckades att ta bort pengar från ditt konto! ~b~Kontakta Support.")
-                                                    print('Transaktion Misslyckades för ' ..
-                                                        identifier .. ' Kunde inte ta bort ' .. transactionAmount)
-                                                    return
-                                                end
-                                            end)
-                                    else
+                                    if not (reciver[1].firstname == transaction.firstname) then
                                         TriggerClientEvent('TPF:client:economy:callback_nui', source, true,
                                             "~r~Konto nummrets namn matchade inte namnet du angav. ~b~Kontrollera namnet och ~g~Försök igen.")
                                         return
                                     end
+
+                                    if not (reciver[1].lastname == transaction.lastname) then
+                                        TriggerClientEvent('TPF:client:economy:callback_nui', source, true,
+                                            "~r~Konto nummrets efternamn matchade inte efternamnet du angav. ~b~Kontrollera efternamnet")
+                                        return
+                                    end
+
+                                    local transactionAmount = transaction.amount
+                                    if tonumber(transactionAmount) > result[1].balance then
+                                        TriggerClientEvent('TPF:client:economy:callback_nui', source, true,
+                                            "~r~Du har inte tillräckligt mycket ~g~pengar ~r~i ditt ~b~saldo!")
+                                        return
+                                    end
+
+                                    MySQL.Async.execute(
+                                        "UPDATE accounts SET balance = balance - @amount WHERE steamid = @steamid AND cindex = @cindex",
+                                        {
+                                            ['@amount'] = transactionAmount,
+                                            ['@steamid'] = identifier,
+                                            ['@cindex'] = cindex
+                                        }, function(rowsAffected)
+                                            if rowsAffected == 1 then
+                                                MySQL.Async.execute(
+                                                    "UPDATE accounts SET balance = balance + @amount WHERE `transaction-id` = @reciverId",
+                                                    {
+                                                        ['@amount'] = transactionAmount,
+                                                        ['@reciverId'] = reciverId,
+                                                    }, function(rowsAffected2)
+                                                        if rowsAffected2 == 1 then
+                                                            local transactionId = generateRandomId()
+                                                            local amount = 'SEK' .. transactionAmount
+                                                            local type = "Överförning"
+                                                            local transactionReciver = "Till " ..
+                                                                reciver[1].firstname .. ' ' .. reciver[1].lastname
+                                                            local note = transaction.note
+                                                            local date = os.date('%d/%m-%Y')
+
+                                                            -- Adding the transaction for the user who made the transaction
+                                                            MySQL.Async.execute(
+                                                                'INSERT INTO transactions (`transaction-id`, steamid, amount, type, reciver, note, date, cindex) VALUES (@transactionId, @steamid, @amount, @type, @reciver, @note, @date, @cindex)',
+                                                                {
+                                                                    ['@transactionId'] = transactionId,
+                                                                    ['@steamid'] = identifier,
+                                                                    ['@amount'] = amount,
+                                                                    ['@type'] = type,
+                                                                    ['@reciver'] = transactionReciver,
+                                                                    ['@note'] = note,
+                                                                    ['@date'] = date,
+                                                                    ['@cindex'] = cindex
+                                                                }, function(rowsAffected3)
+                                                                    if rowsAffected3 == 1 then
+                                                                        local reciverSteam = reciver[1].steamid
+                                                                        local transactionSender = "Av " ..
+                                                                            result[1].firstname ..
+                                                                            " " .. result[1].lastname
+                                                                        local reciverCindex = reciver[1].cindex
+                                                                        MySQL.Async.execute(
+                                                                            "INSERT INTO transactions (`transaction-id`, steamid, amount, type, reciver, note, date, cindex) VALUES (@transactionId, @steamid, @amount, @type, @reciver, @note, @date, @cindex)",
+                                                                            {
+                                                                                ['@transactionId'] = transactionId,
+                                                                                ['@steamid'] = reciverSteam,
+                                                                                ['@amount'] = amount,
+                                                                                ['@type'] = type,
+                                                                                ['@reciver'] = transactionSender,
+                                                                                ['@note'] = note,
+                                                                                ['@date'] = date,
+                                                                                ['@cindex'] = reciverCindex
+                                                                            }, function(success)
+                                                                                if success == 1 then
+                                                                                    local reciverFirstname = reciver
+                                                                                        [1].firstname
+                                                                                    local reciverLastname = reciver
+                                                                                        [1].lastname
+                                                                                    local message = "~g~Skickade ~b~" ..
+                                                                                        amount ..
+                                                                                        " ~g~till " ..
+                                                                                        reciverFirstname ..
+                                                                                        " " .. reciverLastname .. "."
+                                                                                    TriggerClientEvent(
+                                                                                        'TPF:client:economy:callback_nui',
+                                                                                        source, false, message)
+
+
+                                                                                    local title =
+                                                                                    "En transaktion genomfördes."
+
+                                                                                    local discordMessage =
+                                                                                        '*' .. result[1].firstname ..
+                                                                                        ' ' ..
+                                                                                        result[1].lastname ..
+                                                                                        '* överförde **' ..
+                                                                                        amount ..
+                                                                                        '** till *' ..
+                                                                                        reciverFirstname ..
+                                                                                        ' ' ..
+                                                                                        reciverLastname ..
+                                                                                        '*.\n' ..
+                                                                                        result[1].firstname ..
+                                                                                        '\n`' ..
+                                                                                        identifier ..
+                                                                                        '`\n`cindex: ' ..
+                                                                                        cindex ..
+                                                                                        '`\n`ID: ' ..
+                                                                                        result[1]['transaction-id'] ..
+                                                                                        '`\n\n' ..
+                                                                                        reciverFirstname ..
+                                                                                        '\n`' ..
+                                                                                        reciverSteam ..
+                                                                                        '`\n`cindex: ' ..
+                                                                                        reciverCindex ..
+                                                                                        '`\n`ID: ' ..
+                                                                                        reciverId ..
+                                                                                        '`\n\n## Transaktions ID: ' ..
+                                                                                        transactionId
+
+                                                                                    TriggerEvent(
+                                                                                        'TPF:server:economy_discordLog',
+                                                                                        title, discordMessage,
+                                                                                        "transaction")
+                                                                                end
+                                                                            end)
+                                                                    end
+                                                                end)
+                                                        else
+                                                            TriggerClientEvent(
+                                                                'TPF:client:economy:callback_nui', source,
+                                                                true,
+                                                                "~r~Misslyckades att lägga till pengar i mottagarens konto! ~b~Kontakta Support.")
+                                                            print('Transaktion Misslyckades för ' ..
+                                                                identifier ..
+                                                                ' Kunde inte lägga till ' .. transactionAmount)
+                                                            return
+                                                        end
+                                                    end)
+                                            else
+                                                TriggerClientEvent('TPF:client:economy:callback_nui', source,
+                                                    true,
+                                                    "~r~Misslyckades att ta bort pengar från ditt konto! ~b~Kontakta Support.")
+                                                print('Transaktion Misslyckades för ' ..
+                                                    identifier .. ' Kunde inte ta bort ' .. transactionAmount)
+                                                return
+                                            end
+                                        end)
                                 else
                                     TriggerClientEvent('TPF:client:economy:callback_nui', source, true,
                                         "~r~Kontots namn matchade inget aktivt konto. ~b~Kontrollera Transaktions ID't och ~g~Försök igen.")

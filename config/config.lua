@@ -5,8 +5,10 @@ _C = {
 
     -- Här kan ni ändra --
 
-    -- Hur mycket varje spelares karaktär ska ha i sitt saldo när kontot öppnas
+    -- Hur ofta lönen ska ges ut
+    paycheckInterval = "10", -- Standard: 10 | Minuter
 
+    -- Hur mycket varje spelares karaktär ska ha i sitt saldo när kontot öppnas
     startingBalance = "2000", -- Standard: "2000" | string
 
     -- Om spelaren sitter i ett fordon medan de aktiverar /v, ska fordonet de sitter i bli raderat, eller ska den inte göra någonting.

@@ -464,7 +464,7 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(600 * 1000)
+        Citizen.Wait(_C.paycheckInterval * 60000)
         TriggerServerEvent('TPF:server:economy_distributeSalary', GetPlayerServerId(PlayerId()))
         Citizen.Wait(10)
     end
